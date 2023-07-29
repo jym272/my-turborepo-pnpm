@@ -22,5 +22,5 @@
     "skipLibCheck": true, // Skip type checking of declaration files from dependencies for build performance
     "strict": true // strict type checking and additional type-related rules
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
