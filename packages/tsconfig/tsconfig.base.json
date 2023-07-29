@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
+  "compilerOptions": {
+    "target": "esnext",              // Target the latest ECMAScript version for better compatibility
+    "module": "commonjs",            // CommonJS modules for compatibility with Node.js and bundlers
+    "composite": false, // "Project References" feature is not enabled. TypeScript treats each TypeScript project (package) in your monorepo as an independent project, and there is no shared build information or dependency tracking between them.
+    "declaration": true, //// Generate declaration files (.d.ts) for TypeScript consumers
+    "declarationMap": true, // Generate .d.ts.map files for better debugging experience
+    "esModuleInterop": true, // Enable interoperability with CommonJS modules
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing for file names
+    "resolveJsonModule": true,      // Allow importing JSON files as modules
+    "lib": ["esnext", "dom"],        // Provide access to ECMAScript features and DOM APIs
+    "inlineSources": false, //keep the source map separate from the JavaScript output file
+    "isolatedModules": true, // Ensure that each file can be safely transpiled without relying on other imports
+    "moduleResolution": "node", // Use Node.js style module resolution
+    "types": ["node"], // Include type definitions for Node.js
+    "sourceMap": true, // Generate sourcemaps for better debugging experience
+    "noUnusedLocals": true, // Report errors on unused locals
+    "noUnusedParameters": true, // Report errors on unused parameters
+    "preserveWatchOutput": true, // keep the output files for inspection
+    "skipLibCheck": true, // Skip type checking of declaration files from dependencies for build performance
+    "strict": true // strict type checking and additional type-related rules
+  },
+  "exclude": ["node_modules"]
+}
