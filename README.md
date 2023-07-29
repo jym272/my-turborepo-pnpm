@@ -1,3 +1,5 @@
+# https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html
+
 pnpm run build Build all apps and packages
 pnpm run dev
 Develop all apps and packages
