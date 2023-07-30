@@ -1,6 +1,6 @@
 node_modules
 dist
-jest.config.js
+**/*.config.js
 coverage
 **/*.eslintrc.js
 packages/eslint-config-custom/index.js

@@ -6,7 +6,16 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**/*"]
     },
+    "build:dev": {
+      "dependsOn": ["^build:dev"],
+      "outputs": ["dist/**/*"],
+      "inputs": ["src/**/*"]
+    },
     "lint": {},
+    "mint#dev": {
+      "dependsOn": ["rabbit-mq#build:dev"],
+      "outputs": ["dist/**"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

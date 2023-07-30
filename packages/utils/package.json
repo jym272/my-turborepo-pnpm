@@ -2,7 +2,7 @@
   "name": "utils",
   "version": "0.0.0",
   "private": true,
-  "main": "./dist/index.ts",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist",

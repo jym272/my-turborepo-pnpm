@@ -7,7 +7,7 @@
       "decorators": true,
       "dynamicImport": true
     },
-    "target": "es2020",
+    "target": "esnext",
     "paths": {
       "@/*": ["./src/*"],
       "@controllers/*": ["./src/controllers/*"],

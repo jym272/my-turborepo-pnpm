@@ -8,7 +8,7 @@ const needToRequeueWithDelay = () => {
 
 export class MintConsumer extends QueueConsumer {
     public consume() {
-        const { channel, queueName, routingKey } = this;
+        const { channel, queueName } = this;
         if (channel === undefined) {
             throw new Error('RabbitMQ channel not initialized.');
         }
@@ -26,7 +26,7 @@ export class MintConsumer extends QueueConsumer {
                         const { command, sagaId, payload } = parsedMsg;
 
                         switch (command) {
-                            case 'mint_image': //hardocoded -> use enums TODO
+                            case 'mint_image':
                                 void mintImage(sagaId, payload);
                                 break;
 

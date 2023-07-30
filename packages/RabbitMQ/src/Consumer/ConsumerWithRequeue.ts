@@ -1,10 +1,6 @@
 import * as amqp from 'amqplib';
+import { QueueProps } from '../@types/rabbit-mq';
 
-interface QueueProps {
-    name: string;
-    routingKey: string;
-    exchange: string;
-}
 /**
  * This is a test of comment in a class definition
  */

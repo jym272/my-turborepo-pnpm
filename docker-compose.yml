@@ -1,0 +1,43 @@
+services:
+#  adminer:
+#    image: adminer
+#    ports:
+#      - 8082:8080
+#    environment:
+#      - ADMINER_DESIGN=dracula
+#    depends_on:
+#      - db
+#  db:
+#    image: postgres
+#    environment:
+#      - POSTGRES_USER=jorge
+#      - POSTGRES_DB=test
+#      - POSTGRES_PASSWORD=1234
+#    ports:
+#      - 5454:5432
+#    healthcheck:
+#      test: ['CMD-SHELL', "psql -U jorge -d test -c 'SELECT 1'"]
+#      interval: 2s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 2s
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: 1234
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 5s
+      retries: 3
+#
+#  waiting-for-the-services-to-be-ready:
+#    image: hello-world
+#    depends_on:
+#      db:
+#        condition: service_healthy

@@ -28,11 +28,9 @@ export abstract class QueueConsumer extends ConsumerWithRequeue {
         });
         await channel.bindQueue(requeueQueue, ConsumerWithRequeue.requeueExchange, routingKey);
         await channel.prefetch(1); // process only one message at a time
-        console.log('RabbitMQ connection established!');
     }
     protected nackWithDelay(msg: amqp.Message, delay = 2000) {
         if (this.channel === undefined) throw new Error('RabbitMQ channel not initialized.');
-        console.log('NACKKK');
         this.channel.nack(msg, false, false); // nack without requeueing immediately
         this.channel.publish(QueueConsumer.requeueExchange, this.routingKey, msg.content, { expiration: delay }); // requeue with delay
     }
