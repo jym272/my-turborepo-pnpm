@@ -1,7 +1,7 @@
-import express, { Router } from 'express';
+import express, { RequestHandler, Router } from 'express';
 import 'express-async-errors';
 import { addRoutes } from '@/router';
-import { addMiddlewares, addFinalMiddlewares, Middlewares } from '@/middleware';
+import { addMiddlewares, addFinalMiddlewares } from '@/middleware';
 
 export class ServerBuilder {
     private readonly server: express.Express;
@@ -14,7 +14,7 @@ export class ServerBuilder {
         return new ServerBuilder();
     }
 
-    public addMiddlewares(discreteMiddlewares: Middlewares = []): this {
+    public addMiddlewares(discreteMiddlewares: RequestHandler[] = []): this {
         addMiddlewares(this.server, discreteMiddlewares);
         return this;
     }

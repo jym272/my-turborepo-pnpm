@@ -1,0 +1,15 @@
+Cosas que son comunes y pueden ir en está librería
+- El serverbuilder
+- el getEnvOrFail
+- RabbitMQ
+
+
+- Error en logs.ts env vars in turbo
+- Examinar bien typescript en el proyecto, capaz solo necesito un solo typescript 5.00 en tsconfig?
+- el refactor del server de express en una lib involucrá también los final middlewares??
+- añadir eslint, prettier, tsconfig, etc
+
+- mirar como se comporta en forma gloabl: https://turbo.build/repo/docs/reference/command-line-reference/run#--summarize
+
+
+- testear el saga y empezar la refactoirizacion del conusmer y el broker
