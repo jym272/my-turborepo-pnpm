@@ -40,7 +40,7 @@ importers:
         specifier: workspace:*
         version: link:packages/eslint-config-custom
       nodemon:
-        specifier: ^3.0.1
+        specifier: latest
         version: 3.0.1
       prettier:
         specifier: ^2.8.8
@@ -48,6 +48,25 @@ importers:
       turbo:
         specifier: latest
         version: 1.10.12
+
+  apps/image:
+    dependencies:
+      express:
+        specifier: ^4.18.2
+        version: 4.18.2
+      rabbit-mq:
+        specifier: workspace:*
+        version: link:../../packages/RabbitMQ
+    devDependencies:
+      '@types/express':
+        specifier: ^4.17.17
+        version: 4.17.17
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
 
   apps/mint:
     dependencies:
@@ -907,7 +926,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.0
+      semver: 7.5.4
       tsutils: 3.21.0(typescript@5.1.6)
       typescript: 5.1.6
     transitivePeerDependencies:
@@ -928,7 +947,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.61.0(typescript@5.1.6)
       eslint: 8.46.0
       eslint-scope: 5.1.1
-      semver: 7.5.0
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -1177,7 +1196,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.5.0
+      semver: 7.5.4
     dev: true
 
   /bundle-require@4.0.1(esbuild@0.18.17):
@@ -3281,7 +3300,6 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
-    dev: true
 
   /send@0.18.0:
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}

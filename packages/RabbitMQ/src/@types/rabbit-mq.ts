@@ -1,5 +1,8 @@
-export interface QueueProps {
+export interface QueueConsumerProps {
     name: string;
-    routingKey: string;
     exchange: string;
+}
+
+export interface QueueProps extends QueueConsumerProps {
+    routingKey: string;
 }

@@ -41,3 +41,6 @@ yarn-error.log*
 
 #build
 dist/
+
+# force pnpm
+package-lock.json

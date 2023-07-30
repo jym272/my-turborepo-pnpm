@@ -2,9 +2,10 @@ import { ConsumeMessage } from 'amqplib';
 import * as amqp from 'amqplib';
 import ConsumerWithRequeue from './ConsumerWithRequeue';
 import { getRabbitMQConn } from '../connection';
+import { QueueConsumerProps } from '../@types/rabbit-mq';
 
 export abstract class QueueConsumer extends ConsumerWithRequeue {
-    constructor({ name, exchange }: { name: string; exchange: string }) {
+    constructor({ name, exchange }: QueueConsumerProps) {
         super({
             name: name,
             routingKey: `${name}_routing_key`,
