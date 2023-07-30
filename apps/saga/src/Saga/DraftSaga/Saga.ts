@@ -16,7 +16,7 @@
 
 import { getSequelizeClient, Saga } from '@/db';
 import { SagaStepResponse } from '@/Saga';
-import { Broker } from 'rabbit-mq';
+import { Broker, sendToQueue2 } from 'rabbit-mq';
 
 const queues = {
     mint: {
@@ -104,23 +104,28 @@ export const continueNextStepSaga = async (response: SagaStepResponse) => {
     const brokerData = queues[micro];
     console.log('brokerData', brokerData, thisSaga.dataSaga);
 
-    const broker = new Broker(brokerData.name);
-    // await broker.connect();
-
-    const result = await broker.sendToQueue({
+    await sendToQueue2(brokerData.name, {
         command: thisSaga.dataSaga[nexStep].command,
         sagaId: thisSaga.id,
         payload
     });
-    if (result) {
-        thisSaga.dataSaga[nexStep].status = 'sent';
-        await updateSagaStepSate(thisSaga.id, thisSaga.dataSaga);
-    } else {
-        console.error('Error sending command to image micro');
-        // error
-    }
 
-    broker.cleanUp();
+    // const broker = new Broker(brokerData.name);
+    //
+    // const result = await broker.sendToQueue({
+    //     command: thisSaga.dataSaga[nexStep].command,
+    //     sagaId: thisSaga.id,
+    //     payload
+    // });
+    // if (result) {
+    thisSaga.dataSaga[nexStep].status = 'sent';
+    await updateSagaStepSate(thisSaga.id, thisSaga.dataSaga);
+    // } else {
+    //     console.error('Error sending command to image micro');
+    // error
+    // }
+
+    // broker.cleanUp();
 };
 
 export const SagaProcess = async () => {

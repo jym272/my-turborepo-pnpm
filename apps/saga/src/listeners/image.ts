@@ -19,17 +19,13 @@ const parseData = <T>(msg: ConsumeMessage) => {
 };
 
 export const imageCallback = (msg: ConsumeMessage | null, channel: Channel) => {
-    console.log('imageCallback', { msg, channel });
     if (!msg) return; // OJO
-    console.log('imageCallback1');
 
     try {
         if (needToRequeueWithDelay()) {
-            console.log('imageCallback2');
-
+            console.log('NACKING');
             nackWithDelay(msg, imageReplySagaQueue.queueName);
         } else {
-            console.log('imageCallback3');
 
             const parsedMsg = parseData<SagaStepResponse<ImageCommands>>(msg);
             const { command } = parsedMsg;

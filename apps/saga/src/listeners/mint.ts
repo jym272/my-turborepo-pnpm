@@ -18,18 +18,13 @@ const parseData = <T>(msg: ConsumeMessage) => {
 };
 
 export const mintCallback = (msg: ConsumeMessage | null, channel: Channel) => {
-    console.log('mintCallback', { msg, channel });
     if (!msg) return; // OJO
-    console.log('mintCallback1');
 
     try {
         if (needToRequeueWithDelay()) {
-            console.log('mintCallback2');
-
+            console.log('NACKING');
             nackWithDelay(msg, mintReplySagaQueue.queueName);
         } else {
-            console.log('mintCallback3');
-
             const parsedMsg = parseData<SagaStepResponse<MintCommands>>(msg);
             const { command } = parsedMsg;
 

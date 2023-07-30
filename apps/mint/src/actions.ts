@@ -1,5 +1,5 @@
 import { SagaStepResponse } from './types';
-import { Broker } from 'rabbit-mq';
+import { Broker, sendToQueue2 } from 'rabbit-mq';
 
 const waitWithMessage = async (msg: string, time: number) => {
     await new Promise(resolve => setTimeout(resolve, time));
@@ -18,9 +18,10 @@ const updateSaga = async (sagaId: string, payload: Record<string, any>) => {
         status: 'completed',
         payload
     };
-    const broker = new Broker(replySagaQueue.name);
-    const result = await broker.sendToQueue(sagaResponse);
-    console.log('RESULT', result ? 'Reply sent to saga' : 'error Replying to saga'); // it can be 0 or 1
+    await sendToQueue2(replySagaQueue.name, sagaResponse);
+    // const broker = new Broker(replySagaQueue.name);
+    // const result = await broker.sendToQueue(sagaResponse);
+    console.log('RESULT MINT:  Reply sent to saga');
     // broker.cleanUp();
 
     // Yo como micro no conozco el saga completa, conozco como reaccionar a este paso y

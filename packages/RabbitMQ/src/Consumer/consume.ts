@@ -2,7 +2,6 @@ import { Channel, ConsumeMessage } from 'amqplib';
 import { getChannel } from '../connection';
 import { REQUEUE_EXCHANGE, NACKING_DELAY_MS } from '../constants';
 
-// let consumeChannel: Channel;
 
 export const nackWithDelay = (msg: ConsumeMessage, queueName: string, delay = NACKING_DELAY_MS) => {
     const channel = getChannel();
