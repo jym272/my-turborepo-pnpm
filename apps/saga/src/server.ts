@@ -20,11 +20,9 @@ void (async () => {
     }
 })();
 
-const terminateProcessListener = async () => {
-    // TODO: stop consumers
-    // await stopConsumers();
+const terminateProcessListener: NodeJS.SignalsListener = async signal => {
     await stopRabbitMQ();
-    log('\x1b[31m%s\x1b[0m', `${String.fromCodePoint(0x1f44b)} Server is shutting down. Goodbye!`);
+    log('\x1b[31m%s\x1b[0m', `${String.fromCodePoint(0x1f44b)} ${signal} Server is shutting down. Goodbye!`);
     process.exit(0);
 };
 
