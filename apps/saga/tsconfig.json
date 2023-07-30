@@ -1,0 +1,16 @@
+{
+  "extends": "tsconfig/tsconfig.base.json",
+  "include": ["src", "tests"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@db/*": ["./src/db/*"],
+      "@middleware/*": ["./src/middleware/*"],
+      "@router/*": ["./src/router/*"],
+      "@custom-types/*": ["./src/types/*"],
+      "@tests/*": ["./tests/*"]
+    }
+  }
+}

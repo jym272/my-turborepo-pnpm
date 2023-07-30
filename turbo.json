@@ -19,6 +19,15 @@
       "cache": false,
       "persistent": true
     },
+    "saga#dev": {
+      "dependsOn": ["utils#build:dev", "rabbit-mq#build:dev"],
+      "outputs": ["dist/**/*"],
+      "inputs": ["src/**/*"],
+      "env": ["POSTGRES_*", "RABBIT_URI", "CORS_LIST", "PORT"],
+      "dotEnv": [".env"],
+      "cache": false,
+      "persistent": true
+    },
     "dev": {
       "cache": false,
       "persistent": true
