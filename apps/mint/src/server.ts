@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-import { startRabbitMQ } from 'rabbit-mq';
-import { MintConsumer } from './MintConsumer';
+import { startRabbitMQ, consume } from 'rabbit-mq';
+import { callback } from './MintConsumer';
 
 const app = express();
 const port = 3022;
@@ -14,16 +14,13 @@ app.get('/', (_req: Request, res: Response) => {
     res.send("Hello, I'm -mint-");
 });
 
-const mintQueue = {
-    name: 'mint_saga_commands',
+export const mintQueue = {
+    queueName: 'mint_saga_commands',
     exchange: 'commands_exchange'
 };
 
 app.listen(port, async () => {
-    await startRabbitMQ('amqp://rabbit:1234@localhost:5672');
-    const consumer = new MintConsumer(mintQueue);
-    await consumer.connect();
-    consumer.consume();
-
+    await startRabbitMQ('amqp://rabbit:1234@localhost:5672', [mintQueue]);
+    void consume(mintQueue.queueName, callback);
     log(`Server is running on http://localhost:${port}`);
 });

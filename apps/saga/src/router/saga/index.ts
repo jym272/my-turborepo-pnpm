@@ -2,9 +2,9 @@ import { Request, Response, Router } from 'express';
 import { HttpStatusCode } from 'axios';
 import { SagaProcess } from '@/Saga/DraftSaga/Saga';
 
-export const saga = Router();
+export const saga: Router = Router();
 
-saga.get('/saga', async (req: Request, res: Response) => {
+saga.get('/saga', async (_req: Request, res: Response) => {
     await SagaProcess();
     res.status(HttpStatusCode.Ok).json({ message: 'ok' });
 });

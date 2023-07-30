@@ -23,7 +23,9 @@
     "@types/cors": "^2.8.13",
     "@types/cls-hooked": "^4.3.3",
     "eslint-config-custom": "workspace:*",
-    "tsconfig": "workspace:*"
+    "tsconfig": "workspace:*",
+    "amqplib": "latest",
+    "@types/amqplib": "latest"
   },
   "scripts": {
     "build": "swc src -d dist",

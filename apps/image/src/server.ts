@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-import { ImageConsumer } from './ImageConsumer';
-import { startRabbitMQ } from 'rabbit-mq';
+import { consume, startRabbitMQ } from 'rabbit-mq';
+import { callback } from './ImageConsumer';
 
 const app = express();
 const port = 3020;
@@ -14,15 +14,13 @@ app.get('/', (_req: Request, res: Response) => {
     res.send("Hello, I'm -image-");
 });
 
-const imageQueue = {
-    name: 'image_saga_commands',
+export const imageQueue = {
+    queueName: 'image_saga_commands',
     exchange: 'commands_exchange'
 };
 
 app.listen(port, async () => {
-    await startRabbitMQ('amqp://rabbit:1234@localhost:5672');
-    const consumer = new ImageConsumer(imageQueue);
-    await consumer.connect();
-    consumer.consume();
+    await startRabbitMQ('amqp://rabbit:1234@localhost:5672', [imageQueue]);
+    void consume(imageQueue.queueName, callback);
     log(`Server is running on http://localhost:${port}`);
 });

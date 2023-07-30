@@ -1,5 +1,5 @@
 export interface QueueConsumerProps {
-    name: string;
+    queueName: string;
     exchange: string;
 }
 

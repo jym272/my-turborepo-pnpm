@@ -12,7 +12,14 @@
       "inputs": ["src/**/*"]
     },
     "lint": {},
-    "micro-*#dev": {
+    "micro-mint#dev": {
+      "dependsOn": ["rabbit-mq#build:dev"],
+      "outputs": ["dist/**/*"],
+      "inputs": ["src/**/*"],
+      "cache": false,
+      "persistent": true
+    },
+    "micro-image#dev": {
       "dependsOn": ["rabbit-mq#build:dev"],
       "outputs": ["dist/**/*"],
       "inputs": ["src/**/*"],

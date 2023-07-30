@@ -17,6 +17,7 @@ export class Broker extends DirectMessageDelivery {
         }
     }
     public async sendToQueue<T extends Record<string, any>>(payload: T) {
+        //https://github.com/amqp-node/amqplib/blob/main/examples/tutorials/send.js
         await this.connect();
         const { channel } = this;
         if (channel === undefined) {
