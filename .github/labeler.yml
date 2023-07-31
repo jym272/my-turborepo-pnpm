@@ -1,0 +1,10 @@
+# See https://github.com/actions/labeler
+
+
+'🚨 action':
+- .github/workflows/**
+
+'pkg: rabbit-mq':
+- packages/RabbitMQ/**
+
+

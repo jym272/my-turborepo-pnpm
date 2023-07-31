@@ -4,7 +4,14 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**/*"]
+      "inputs": [
+        "**/*",
+        "!test/**/*",
+        "!e2e/**/*",
+        "!performance/**/*"
+      ],
+      "outputs": ["dist/**/*"],
+      "outputMode": "new-only"
     },
     "build:dev": {
       "dependsOn": ["^build:dev"],
