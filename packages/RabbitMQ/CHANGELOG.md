@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.1.8
+
+### Patch Changes
+
+-   3368d6d: test
+
 ## 0.1.7
 
 ### Patch Changes
