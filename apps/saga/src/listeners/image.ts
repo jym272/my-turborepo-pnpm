@@ -23,10 +23,10 @@ export const imageCallback = (msg: ConsumeMessage | null, channel: Channel) => {
 
     try {
         if (needToRequeueWithDelay()) {
-            console.log('NACKING');
+            // const headers = msg.properties.headers;
+            console.log('NACKING IMAGE');
             nackWithDelay(msg, imageReplySagaQueue.queueName);
         } else {
-
             const parsedMsg = parseData<SagaStepResponse<ImageCommands>>(msg);
             const { command } = parsedMsg;
 

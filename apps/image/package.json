@@ -5,7 +5,10 @@
   "main": "./dist/server.js",
   "private": true,
   "dependencies": {
-    "rabbit-mq": "workspace:*"
+    "rabbit-mq": "workspace:*",
+    "express-async-errors": "^3.1.1",
+    "express": "latest",
+    "@types/express": "latest"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
