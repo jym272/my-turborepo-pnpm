@@ -51,6 +51,6 @@ export const imageCallback = (msg: ConsumeMessage | null, channel: Channel) => {
         }
     } catch (error) {
         console.log('ERROR');
-        channel.nack(msg, false, false);
+        channel.nack(msg, false, false); //quizas sea mejor nackearlo con requeue
     }
 };
