@@ -1,5 +1,12 @@
 # saga
 
+## 0.0.6
+
+### Patch Changes
+
+-   Updated dependencies [b3bf763]
+    -   rabbit-mq11111@0.1.9
+
 ## 0.0.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.1.9
+
+### Patch Changes
+
+-   b3bf763: testing in pr
+
 ## 0.1.8
 
 ### Patch Changes
