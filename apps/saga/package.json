@@ -1,6 +1,6 @@
 {
   "name": "saga",
-  "version": "0.0.0",
+  "version": "0.0.4",
   "description": "",
   "main": "./dist/server.js",
   "private": true,
@@ -14,7 +14,7 @@
     "cors": "^2.8.5",
     "cors-anywhere": "^0.4.4",
     "utils": "workspace:*",
-    "rabbit-mq": "workspace:*",
+    "rabbit-mq11111": "workspace:*",
     "express": "latest",
     "@types/express": "latest"
   },

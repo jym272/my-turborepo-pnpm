@@ -1,11 +1,11 @@
 {
   "name": "micro-mint",
-  "version": "0.0.0",
+  "version": "0.0.4",
   "description": "",
   "main": "./dist/server.js",
   "private": true,
   "dependencies": {
-    "rabbit-mq": "workspace:*",
+    "rabbit-mq11111": "workspace:*",
     "express-async-errors": "^3.1.1",
     "express": "latest",
     "@types/express": "latest"

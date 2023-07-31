@@ -1,5 +1,8 @@
 # https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html
 
+
+https://dev.to/orabazu/how-to-bundle-a-tree-shakable-typescript-library-with-tsup-and-publish-with-npm-3c46
+
 pnpm run build Build all apps and packages
 pnpm run dev
 Develop all apps and packages

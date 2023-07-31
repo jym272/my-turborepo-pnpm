@@ -1,9 +1,12 @@
 {
-  "name": "rabbit-mq",
-  "version": "0.0.0",
+  "name": "rabbit-mq11111",
+  "version": "0.1.7",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "private": true,
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "README.md"
@@ -14,24 +17,34 @@
     "build": "pnpm run prebuild && tsup",
     "lint": "eslint --ext .ts src",
     "typecheck": "tsc --noEmit",
-    "prebuild" : "pnpm run typecheck"
+    "prebuild": "pnpm run typecheck"
   },
   "dependencies": {
-    "amqplib": "latest"
+    "amqplib": "latest",
+    "@types/amqplib": "latest"
   },
   "devDependencies": {
-    "@types/amqplib": "latest",
     "tsconfig": "workspace:*",
     "eslint-config-custom": "workspace:*"
   },
+  "peerDependencies": {
+    "amqplib": ">=0.10.3",
+    "@types/amqplib": ">=0.10.1"
+  },
   "tsup": {
-    "entry": ["src/index.ts"],
-    "splitting": false,
+    "entry": [
+      "src/**/*.ts"
+    ],
+    "splitting": true,
     "sourcemap": false,
     "clean": true,
-    "format": ["cjs", "esm"],
+    "format": [
+      "cjs",
+      "esm"
+    ],
     "dts": true,
-    "treeshake": "recommended",
-    "minify": false
+    "treeshake": true,
+    "minify": true,
+    "outDir": "dist"
   }
 }
