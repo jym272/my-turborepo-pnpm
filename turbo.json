@@ -6,7 +6,7 @@
       "dependsOn": ["^build"],
       "inputs": [
         "**/*",
-        "!test/**/*",
+        "!.turbo/**/*",
         "!e2e/**/*",
         "!performance/**/*"
       ],
