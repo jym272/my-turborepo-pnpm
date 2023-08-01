@@ -1,11 +1,19 @@
 import * as amqp from 'amqplib';
-import { getUri } from '../connection';
+import { getRabbitMQConn } from '../connection';
+
+let sendChannel: amqp.Channel | null = null;
+
+export const getSendChannel = async () => {
+    if (sendChannel === null) {
+        sendChannel = await getRabbitMQConn().createChannel();
+    }
+    return sendChannel;
+};
 
 export const sendToQueue2 = async <T extends Record<string, any>>(queueName: string, payload: T) => {
-    let connection;
+    // let connection;
     try {
-        connection = await amqp.connect(getUri());
-        const channel = await connection.createChannel();
+        const channel = await getSendChannel();
         await channel.assertQueue(queueName, { durable: true });
 
         // NB: `sentToQueue` and `publish` both return a boolean
@@ -16,10 +24,11 @@ export const sendToQueue2 = async <T extends Record<string, any>>(queueName: str
         channel.sendToQueue(queueName, Buffer.from(JSON.stringify(payload)), {
             persistent: true
         });
-        await channel.close();
+        // await channel.close();
     } catch (err) {
         console.warn(err);
-    } finally {
-        if (connection) await connection.close();
     }
+    /*finally {
+        if (connection) await connection.close();
+    }*/
 };
