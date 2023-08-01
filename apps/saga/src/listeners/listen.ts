@@ -2,6 +2,7 @@ import { SagaStepResponse } from '@/Saga';
 import { continueNextStepSaga } from '@/Saga/DraftSaga/Saga';
 import { Channel, ConsumeMessage } from 'amqplib';
 import { nackWithDelay } from 'rabbit-mq11111';
+import { Saga } from '@/Saga/RefactorSaga';
 
 const needToRequeueWithDelay = () => {
     return Math.random() >= 0.9;
@@ -26,6 +27,7 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
                         case 'create_image': //hardocoded -> use enums TODO
                             if (parsedMsg.status === 'completed') {
                                 void continueNextStepSaga(parsedMsg);
+                                // void Saga.continueNextStepSaga(parsedMsg);
                             } else {
                                 // pensar que hacer aca TODO
                                 console.log('ERROR', parsedMsg);
@@ -45,6 +47,7 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
                             if (parsedMsg.status === 'completed') {
                                 console.log('MINTEANDO ANDO');
                                 void continueNextStepSaga(parsedMsg);
+                                // void Saga.continueNextStepSaga(parsedMsg);
                             } else {
                                 // pensar que hacer aca TODO
                                 console.log('ERROR', parsedMsg);

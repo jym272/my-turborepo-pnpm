@@ -18,7 +18,18 @@ import { getSequelizeClient, Saga } from '@/db';
 import { SagaStepResponse } from '@/Saga';
 import { sendToQueue } from 'rabbit-mq11111';
 
-const queues = {
+type AvailableMicroservices = 'image' | 'mint';
+
+interface SagaStep {
+    status: string;
+    command: string;
+    response: Record<string, any>;
+    micro: AvailableMicroservices;
+    currentStep: boolean;
+    nextStep: string;
+    previousStep: string;
+}
+const queues: Record<AvailableMicroservices, Record<'name', string>> = {
     mint: {
         name: 'mint_saga_commands'
     },
@@ -40,8 +51,6 @@ const createSaga = async () => {
         return newSaga;
     } catch (err) {
         throw Error("Can't create Saga");
-        // const error = parseSequelizeError(err, `Creating Saga failed.`);
-        // throwError('Creating Saga failed.', HttpStatusCode.InternalServerError, error);
     }
 };
 
@@ -72,53 +81,55 @@ const getSaga = async (id: number) => {
     }
 };
 
-export interface Command {
-    command: string;
-    sagaId: number;
-    payload: Record<string, any>;
-}
-
-// continue implica que fue un exito, talves antes de llegar aca habria asegurarse que fue exitoso
-export const continueNextStepSaga = async (response: SagaStepResponse) => {
-    const { command, sagaId, status, payload } = response;
-    const thisSaga = await getSaga(sagaId);
-    console.log('thisSaga', thisSaga.dataSaga, response);
-    const currentStep = Object.keys(thisSaga.dataSaga).find(step => {
-        return thisSaga.dataSaga[step].currentStep === true;
+const updateCurrentStep = (dataSaga: Saga, payload: Record<string, any>) => {
+    const currentStep = Object.keys(dataSaga).find(step => {
+        return dataSaga[step].currentStep === true;
     });
     console.log('currentStep', currentStep);
-    thisSaga.dataSaga[currentStep].status = status;
-    thisSaga.dataSaga[currentStep].currentStep = false;
-    thisSaga.dataSaga[currentStep].response = payload;
-    const nexStep = thisSaga.dataSaga[currentStep].nextStep;
-    if (nexStep === 'finished') {
+
+    dataSaga[currentStep].status = 'success';
+    dataSaga[currentStep].currentStep = false;
+    dataSaga[currentStep].response = payload;
+
+    return dataSaga[currentStep].nextStep;
+};
+
+// happy path -> if continueNextStepSaga is invoked, is because status is success
+export const continueNextStepSaga = async (response: SagaStepResponse) => {
+    // el payload del response va al siguiente paso!
+    const { sagaId, status, payload } = response;
+    const thisSaga = await getSaga(sagaId);
+    console.log('thisSaga', thisSaga.dataSaga, response);
+
+    const nextStep = updateCurrentStep(thisSaga.dataSaga);
+
+    if (nextStep === 'finished') {
         console.log('FINSIHED SAGA');
         return;
     }
-    console.log('asd', nexStep, thisSaga.dataSaga[nexStep]);
 
-    thisSaga.dataSaga[nexStep].currentStep = true;
-    const micro = thisSaga.dataSaga[nexStep].micro;
-    const brokerData = queues[micro];
-    console.log('brokerData', brokerData, thisSaga.dataSaga);
+
+    //Send to Queue
+    const nextMicro = thisSaga.dataSaga[nextStep].micro;
+    const brokerData = queues[nextMicro];
 
     await sendToQueue(brokerData.name, {
-        command: thisSaga.dataSaga[nexStep].command,
+        command: thisSaga.dataSaga[nextStep].command,
         sagaId: thisSaga.id,
         payload
     });
 
-
-    thisSaga.dataSaga[nexStep].status = 'sent';
+    // update next saga in DB
+    thisSaga.dataSaga[nextStep].currentStep = true;
+    thisSaga.dataSaga[nextStep].status = 'sent';
     await updateSagaStepSate(thisSaga.id, thisSaga.dataSaga);
-
 };
 
 export const SagaProcess = async () => {
     // inicio el SAGA en base de datos con el estado inicial
     const newSaga = await createSaga(); // crear un saga que tengas steps definidos
     console.log('SagaProcess has begun', newSaga.id);
-    const dataSaga = {
+    const dataSaga: Record<string, SagaStep> = {
         step1: {
             status: 'pending',
             command: 'create_image',
