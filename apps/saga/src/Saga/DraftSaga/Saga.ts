@@ -16,7 +16,7 @@
 
 import { getSequelizeClient, Saga } from '@/db';
 import { SagaStepResponse } from '@/Saga';
-import { Broker, sendToQueue2 } from 'rabbit-mq11111';
+import { sendToQueue } from 'rabbit-mq11111';
 
 const queues = {
     mint: {
@@ -104,28 +104,16 @@ export const continueNextStepSaga = async (response: SagaStepResponse) => {
     const brokerData = queues[micro];
     console.log('brokerData', brokerData, thisSaga.dataSaga);
 
-    await sendToQueue2(brokerData.name, {
+    await sendToQueue(brokerData.name, {
         command: thisSaga.dataSaga[nexStep].command,
         sagaId: thisSaga.id,
         payload
     });
 
-    // const broker = new Broker(brokerData.name);
-    //
-    // const result = await broker.sendToQueue({
-    //     command: thisSaga.dataSaga[nexStep].command,
-    //     sagaId: thisSaga.id,
-    //     payload
-    // });
-    // if (result) {
+
     thisSaga.dataSaga[nexStep].status = 'sent';
     await updateSagaStepSate(thisSaga.id, thisSaga.dataSaga);
-    // } else {
-    //     console.error('Error sending command to image micro');
-    // error
-    // }
 
-    // broker.cleanUp();
 };
 
 export const SagaProcess = async () => {
@@ -165,38 +153,7 @@ export const SagaProcess = async () => {
     const micro = dataSaga.step1.micro;
     const brokerData = queues[micro];
 
-    const broker = new Broker(brokerData.name);
-    // await broker.connect();
-    // parece mas relevante este dataSaga -> al final del dia parece que es el que da todas las instrucciones
-
-    const result = await broker.sendToQueue({ command: dataSaga.step1.command, sagaId: newSaga.id, payload: {} });
-    if (result) {
-        dataSaga.step1.status = 'sent';
-        await updateSagaStepSate(newSaga.id, dataSaga);
-    } else {
-        console.error('Error sending command to image micro');
-        // error
-    }
-
-    broker.cleanUp();
-    // envío el comando a la micro de imagen para guardar cierta imagen.
-    // envía la orden y persisto en base de datos el estado
-    // cada micro escucha en su correspondiente queue
-    /* PERSISTENCIA EN BASE DE DATOS
-    Que guardo ?
-    - id de la saga
-    - estado de la saga
-    - id de la orden
-    - estado de la orden
-
-
-
-
-
-
-
-     */
+    dataSaga.step1.status = 'sent';
+    await updateSagaStepSate(newSaga.id, dataSaga);
+    await sendToQueue(brokerData.name, { command: dataSaga.step1.command, sagaId: newSaga.id, payload: {} });
 };
-
-// en un proceso aparte escucho los eventos de la micro de imagen -> reply channel
-// este reply channel continua con el saga

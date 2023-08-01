@@ -15,7 +15,7 @@ void (async () => {
         const server = await ServerBuilder.create().addMiddlewares().addRoutes().build({ withDb: startSequelize });
         server.listen(PORT, () => logServerIsRunning(PORT));
         await startRabbitMQ(getEnvOrFail('RABBIT_URI'), [replySagaQueue]);
-        void consume('reply_to_saga', callback); // TODO: unificar los consumers, una sola cola de replies
+        void consume('reply_to_saga', callback);
     } catch (error) {
         log(error);
         process.exitCode = 1;

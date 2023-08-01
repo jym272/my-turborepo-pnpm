@@ -4,7 +4,7 @@ import { Channel, ConsumeMessage } from 'amqplib';
 import { nackWithDelay } from 'rabbit-mq11111';
 
 const needToRequeueWithDelay = () => {
-    return Math.random() >= 0.5;
+    return Math.random() >= 0.9;
 };
 
 const parseData = <T>(msg: ConsumeMessage) => {
@@ -12,8 +12,7 @@ const parseData = <T>(msg: ConsumeMessage) => {
 };
 
 export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
-    if (!msg) return; // OJO
-
+    if (!msg) return;
     try {
         if (needToRequeueWithDelay()) {
             console.log('NACKING IMAGE');

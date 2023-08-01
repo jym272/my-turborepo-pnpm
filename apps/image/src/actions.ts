@@ -1,5 +1,5 @@
 import { SagaStepResponse } from './types';
-import { sendToQueue2 } from 'rabbit-mq11111';
+import { sendToQueue } from 'rabbit-mq11111';
 
 const waitWithMessage = async (msg: string, time: number) => {
     await new Promise(resolve => setTimeout(resolve, time));
@@ -20,7 +20,7 @@ const updateSaga = async (sagaId: string, payload: Record<string, any>) => {
         payload
     };
 
-    await sendToQueue2(replySagaQueue.name, sagaResponse);
+    await sendToQueue(replySagaQueue.name, sagaResponse);
     console.log('RESULT IMAGE:  Reply sent to saga');
 };
 

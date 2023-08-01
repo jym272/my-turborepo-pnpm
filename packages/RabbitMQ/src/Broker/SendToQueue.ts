@@ -10,7 +10,7 @@ const getSendChannel = async () => {
     return sendChannel;
 };
 
-export const sendToQueue2 = async <T extends Record<string, any>>(queueName: string, payload: T) => {
+export const sendToQueue = async <T extends Record<string, any>>(queueName: string, payload: T) => {
     // let connection;
     try {
         const channel = await getSendChannel();
