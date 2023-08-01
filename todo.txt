@@ -23,5 +23,5 @@ Cosas que son comunes y pueden ir en está librería
 - completar saga
 - refactorizar
 - usar varios containers para probar
-- mantener la conexion abierta para el publish!, la conexion esta abierta para el subscribe!
-- concurrencia en varios container del saga
+- concurrencia en varios container del saga -> relacion con postgresql
+- unificar el reply -> el saga escucha en un solo canal! -> reply channel -> tambien tiene un solo requeueu channel

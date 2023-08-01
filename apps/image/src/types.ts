@@ -4,7 +4,7 @@ export interface QueueProps {
     exchange: string;
 }
 
-export type ImageCommands = 'create_image' | 'add_token_to_image';
+export type ImageCommands = 'create_image' | 'update_token';
 export interface Message {
     command: ImageCommands;
     sagaId: string;
@@ -19,6 +19,7 @@ export enum status {
 export type Status = keyof typeof status;
 
 export interface SagaStepResponse {
+    microservice: 'image';
     command: ImageCommands;
     status: Status;
     sagaId: string;

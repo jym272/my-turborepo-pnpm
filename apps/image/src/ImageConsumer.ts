@@ -1,5 +1,5 @@
 import { SagaStepResponse } from './types';
-import { createImage } from './actions';
+import { createImage, updateToken } from './actions';
 import { Channel, ConsumeMessage } from 'amqplib';
 import { nackWithDelay } from 'rabbit-mq11111';
 import { imageQueue } from './server';
@@ -26,8 +26,8 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
                 case 'create_image': //hardocoded -> use enums TODO
                     void createImage(sagaId);
                     break;
-                case 'add_token_to_image':
-                    console.log('ADD TOKEN TO IMAGE');
+                case 'update_token':
+                    void updateToken(sagaId);
                     break;
                 default:
                     console.log('DEFAULT');

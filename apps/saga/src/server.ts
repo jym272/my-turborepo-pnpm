@@ -2,18 +2,20 @@ import { ServerBuilder } from '@/builder';
 import { startSequelize } from '@/db';
 import { getEnvOrFail, log, logServerIsRunning } from 'utils';
 import { consume, startRabbitMQ, stopRabbitMQ } from 'rabbit-mq11111';
-import { imageCallback, imageReplySagaQueue, mintCallback, mintReplySagaQueue } from '@/listeners';
+import { callback } from '@/listeners';
 
-const replies = [imageReplySagaQueue, mintReplySagaQueue];
+const replySagaQueue = {
+    queueName: 'reply_to_saga',
+    exchange: 'reply_exchange'
+};
 
 void (async () => {
     try {
         const PORT = getEnvOrFail('PORT');
         const server = await ServerBuilder.create().addMiddlewares().addRoutes().build({ withDb: startSequelize });
         server.listen(PORT, () => logServerIsRunning(PORT));
-        await startRabbitMQ(getEnvOrFail('RABBIT_URI'), replies);
-        void consume(imageReplySagaQueue.queueName, imageCallback);
-        void consume(mintReplySagaQueue.queueName, mintCallback);
+        await startRabbitMQ(getEnvOrFail('RABBIT_URI'), [replySagaQueue]);
+        void consume('reply_to_saga', callback); // TODO: unificar los consumers, una sola cola de replies
     } catch (error) {
         log(error);
         process.exitCode = 1;

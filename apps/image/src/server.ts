@@ -24,5 +24,5 @@ app.listen(port, async () => {
     await startRabbitMQ('amqp://rabbit:1234@localhost:5672', [imageQueue]);
     void consume(imageQueue.queueName, callback);
 
-    log(`Serversss is running on http://localhost:${port}`);
+    log(`Server is running on http://localhost:${port}`);
 });

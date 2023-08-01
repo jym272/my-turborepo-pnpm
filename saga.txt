@@ -1,0 +1,3 @@
+-> Si envío un comando, tengo que asegurarme la perisitencia antes
+esto invlocura tener en db en que step estyo sii,
+de esta forma solo espero respuesta de un step y no de todos -> maquina de estados

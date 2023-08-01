@@ -1,5 +1,5 @@
 import { SagaStepResponse } from './types';
-import {  sendToQueue2 } from 'rabbit-mq11111';
+import { sendToQueue2 } from 'rabbit-mq11111';
 
 const waitWithMessage = async (msg: string, time: number) => {
     await new Promise(resolve => setTimeout(resolve, time));
@@ -7,12 +7,13 @@ const waitWithMessage = async (msg: string, time: number) => {
 };
 
 const replySagaQueue = {
-    name: 'mint_saga_reply',
-    routingKey: 'mint_micro'
+    name: 'reply_to_saga',
+    routingKey: 'mint_micro' // no se usa por ahora
 };
 
 const updateSaga = async (sagaId: string, payload: Record<string, any>) => {
     const sagaResponse: SagaStepResponse = {
+        microservice: 'mint',
         sagaId,
         command: 'mint_image', // los comandos terminan siendo pasos de un saga
         status: 'completed',

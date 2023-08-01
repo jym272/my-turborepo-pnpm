@@ -20,6 +20,7 @@ export enum status {
 export type Status = keyof typeof status;
 
 export interface SagaStepResponse {
+    microservice: 'mint';
     command: MintCommands;
     status: Status;
     sagaId: string;
