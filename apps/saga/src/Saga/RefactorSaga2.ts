@@ -1,11 +1,12 @@
 import { sendToQueue } from 'rabbit-mq11111';
 import { getSequelizeClient, Saga as SagaModel } from '@/db';
+import { buildLinkedList, Data, LinkedList, LinkedListNode } from '@/Saga/RefactorSaga2LinkedList';
 
 export type ImageCommands = 'create_image' | 'add_token_to_image';
 export type MintCommands = 'mint_image' | 'add_token_to_image';
 export type AvailableMicroservices = 'image' | 'mint';
 
-const queues: Record<'image' | 'mint', Record<'name', string>> = {
+const queues: Record<AvailableMicroservices, Record<'name', string>> = {
     mint: {
         name: 'mint_saga_commands'
     },
@@ -20,33 +21,13 @@ export interface SagaStepResponse {
     sagaId: number;
     payload: Record<string, any>;
 }
-type stepName = string;
-export interface SagaStep {
-    status: string;
-    command: string;
-    response: Record<string, any>;
-    micro: AvailableMicroservices;
-    currentStep: boolean;
-    nextStep: stepName | 'finished';
-    previousStep: string;
-}
-export class SagaStepData {
-    status: 'pending' | 'success' | 'failure' | 'sent' | 'completed' = 'pending';
-    response: Record<string, any> = {};
 
-    constructor(public micro: AvailableMicroservices, public command: string, public nextStep: stepName | 'finished') {
-        //
-    }
-}
-
-type DataSaga = Record<stepName, SagaStep>;
-
-const createSaga = async (dataSaga: DataSaga) => {
+const createSaga = async () => {
     let newSaga: SagaModel;
     try {
         newSaga = await getSequelizeClient().transaction(async () => {
             return await SagaModel.create({
-                dataSaga
+                dataSaga: {}
             });
         });
         return newSaga;
@@ -55,7 +36,7 @@ const createSaga = async (dataSaga: DataSaga) => {
     }
 };
 
-const updateSagaStepSate = async (id: number, dataSaga: DataSaga) => {
+const updateSagaStepSate = async (id: number, dataSaga: LinkedList) => {
     try {
         await getSequelizeClient().transaction(async () => {
             const saga = await SagaModel.findByPk(id);
@@ -70,79 +51,61 @@ const updateSagaStepSate = async (id: number, dataSaga: DataSaga) => {
 };
 
 export class Saga {
-    private steps: Record<stepName, SagaStepData> = {};
-    private currentStepName: stepName | null = null;
+    private currentStepNode: LinkedListNode | null;
 
-    constructor(public sagaId: number) {
-        //
-    }
-
-    public addStep(name: stepName, micro: AvailableMicroservices, command: string, nextStep: stepName): void {
-        this.steps[name] = new SagaStepData(micro, command, nextStep);
-    }
-
-    public getStep(name: string): SagaStepData | undefined {
-        return this.steps[name];
-    }
-
-    public getCurrentStep(): SagaStepData | undefined {
-        return this.currentStepName ? this.steps[this.currentStepName] : undefined;
+    constructor(public sagaId: number, public stepsList: LinkedList) {
+        this.currentStepNode = stepsList.head;
     }
 
     public async startSaga() {
-        const startStep: stepName = Object.keys(this.steps)[0];
-        if (startStep) {
-            this.currentStepName = startStep;
-            this.steps[startStep].status = 'sent';
-            await this.updateSagaStepState();
-            this.sendCurrentStepToQueue();
-        }
+        this.currentStepNode?.updateStatus('sent');
+        await this.updateSagaStepState();
+        this.sendCurrentStepToQueue();
     }
 
     public async continueNextStep(response: SagaStepResponse): Promise<void> {
         const { status, payload } = response;
-        const currentStep = this.getCurrentStep();
+        const currentStep = this.currentStepNode;
         if (!currentStep) {
             console.log('No current step found.');
             return;
         }
 
-        currentStep.status = status;
-        currentStep.response = payload;
+        currentStep.updateStatus(status);
+        currentStep.updateResponse(payload);
 
-        const nextStepName = currentStep.nextStep;
-        if (!nextStepName) {
+        // puedo chequear el final pero tendria que actualizar antes de finalizar
+        if (currentStep.next === null) {
             console.log('Finished Saga.');
             return;
         }
-
-        this.currentStepName = nextStepName;
-        this.steps[nextStepName].status = 'sent';
+        this.currentStepNode = currentStep.next; //UPDATING NEXT CURRENT STEP!!!
+        this.currentStepNode.updateStatus('sent');
         await this.updateSagaStepState();
         this.sendCurrentStepToQueue();
     }
 
     private async updateSagaStepState() {
-        await updateSagaStepSate(this.sagaId, this.steps);
+        await updateSagaStepSate(this.sagaId, this.stepsList);
     }
 
     private sendCurrentStepToQueue(): void {
-        const currentStep = this.getCurrentStep();
+        const currentStep = this.currentStepNode;
         if (!currentStep) {
             console.log('No current step found.');
             return;
         }
 
-        const { micro, command } = currentStep;
+        const { micro, command } = currentStep.getData();
         const brokerData = queues[micro];
 
         sendToQueue(brokerData.name, {
             command,
             sagaId: this.sagaId,
-            payload: currentStep.response
+            payload: currentStep.getResponse()
         })
             .then(() => {
-                console.log(`Step "${this.currentStepName}" sent to queue.`);
+                console.log(`Step "${this.currentStepNode}" sent to queue.`);
             })
             .catch(error => {
                 console.error('Error sending step to queue:', error);
@@ -150,60 +113,54 @@ export class Saga {
     }
 }
 
-const dataSaga: DataSaga = {
-    step1: {
-        status: 'pending',
-        command: 'create_image',
-        response: {},
-        micro: 'image',
-        currentStep: true,
-        nextStep: 'step2',
-        previousStep: 'start'
-    },
-    step2: {
-        status: 'pending', //uso la response de step1
-        command: 'mint_image',
-        response: {},
-        micro: 'mint',
-        currentStep: false,
-        nextStep: 'step3',
-        previousStep: 'step1'
-    },
-    step3: {
-        status: 'pending', //uso la response de step2
-        command: 'update_token',
-        response: {},
-        micro: 'image',
-        currentStep: false,
-        nextStep: 'finished',
-        previousStep: 'step2'
-    }
-};
-
 export class SagaManager {
-    public static async createSaga(steps: Record<stepName, SagaStep>): Promise<Saga> {
+    public static async createSaga(steps: LinkedList): Promise<Saga> {
         try {
-            const newSaga = await this.createSagaInDatabase({});
-            const saga = new Saga(newSaga.id);
-            for (const stepName in steps) {
-                if (Object.prototype.hasOwnProperty.call(steps, stepName)) {
-                    const step = steps[stepName];
-                    saga.addStep(stepName, step.micro, step.command, step.nextStep);
-                }
-            }
-            return saga;
+            const newSaga = await this.createSagaInDatabase();
+            return new Saga(newSaga.id, steps);
         } catch (err) {
             throw new Error("Can't create Saga");
         }
     }
 
-    private static async createSagaInDatabase(dataSaga: DataSaga) {
-        return await createSaga(dataSaga);
+    private static async createSagaInDatabase() {
+        return await createSaga();
     }
 }
 
+const dataForNodeInLinkedList: Data[] = [
+    {
+        command: 'create_image',
+        micro: 'image'
+    },
+    {
+        command: 'mint_image',
+        micro: 'mint'
+    },
+    {
+        command: 'update_token',
+        micro: 'image'
+    }
+];
+
+const getSaga = async (id: number) => {
+    try {
+        const saga = await SagaModel.findByPk(id);
+        if (!saga) {
+            throw Error("Can't find Saga");
+        }
+        return saga;
+    } catch (err) {
+        throw Error("Can't find Saga");
+    }
+};
+export const continueNextStepSaga = async (response: SagaStepResponse) => {
+    const thisSaga = await getSaga(response.sagaId);
+};
+
 export const SagaProcess = async () => {
-    const saga = await SagaManager.createSaga(dataSaga);
+    const linkedList = buildLinkedList(dataForNodeInLinkedList);
+    const saga = await SagaManager.createSaga(linkedList);
     console.log('Saga created:', saga);
     await saga.startSaga();
     console.log('SagaProcess has begun', saga.sagaId);
