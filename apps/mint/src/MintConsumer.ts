@@ -1,7 +1,7 @@
 import { SagaStepResponse } from './types';
 import { mintImage } from './actions';
 import { Channel, ConsumeMessage } from 'amqplib';
-import { nackWithDelay } from 'rabbit-mq';
+import { nackWithDelay } from 'rabbit-mq11111';
 import { mintQueue } from './server';
 
 const needToRequeueWithDelay = () => {

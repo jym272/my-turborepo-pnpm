@@ -1,6 +1,6 @@
 {
   "extends": "tsconfig/tsconfig.base.json",
-  "include": ["src", "tests"],
+  "include": ["src"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {

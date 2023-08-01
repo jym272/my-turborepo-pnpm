@@ -1,5 +1,5 @@
 import { SagaStepResponse } from './types';
-import { Broker, sendToQueue2 } from 'rabbit-mq';
+import {  sendToQueue2 } from 'rabbit-mq11111';
 
 const waitWithMessage = async (msg: string, time: number) => {
     await new Promise(resolve => setTimeout(resolve, time));

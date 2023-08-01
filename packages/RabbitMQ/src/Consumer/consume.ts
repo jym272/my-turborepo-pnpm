@@ -55,7 +55,7 @@ export const consume = async (queueName: string, cb: (msg: ConsumeMessage | null
             cb(msg, channel);
         },
         {
-            exclusive: true, // only one consumer per queue
+            exclusive: false, // if true, only one consumer can consume from the queue
             noAck: false // we need to ack the messages, manually
         }
     );

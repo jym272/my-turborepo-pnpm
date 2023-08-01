@@ -11,6 +11,7 @@ const log = console.log;
 app.use(express.json());
 
 app.get('/', (_req: Request, res: Response) => {
+    console.log('sou uo');
     res.send("Hello, I'm -image-");
 });
 
@@ -22,5 +23,6 @@ export const imageQueue = {
 app.listen(port, async () => {
     await startRabbitMQ('amqp://rabbit:1234@localhost:5672', [imageQueue]);
     void consume(imageQueue.queueName, callback);
-    log(`Server is running on http://localhost:${port}`);
+
+    log(`Serversss is running on http://localhost:${port}`);
 });

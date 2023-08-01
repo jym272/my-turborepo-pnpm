@@ -1,12 +1,41 @@
 services:
-  adminer:
-    image: adminer
-    ports:
-      - 8082:8080
-    environment:
-      - ADMINER_DESIGN=dracula
-    depends_on:
-      - db
+#  legend:
+#    # https://docs.docker.com/compose/compose-file/deploy/
+#    deploy:
+#      replicas: 2
+#    build:
+#      context: .
+#      dockerfile: apps/image/dev.Dockerfile
+#    environment:
+##      # mongodb://root:1234@mongo-one-db:27017,mongo-two-db:27017,mongo-three-db:27017/?replicaSet=dbrs
+##      MONGO_URI: mongodb://mongo.one.db,mongo.two.db,mongo.three.db:27017/?replicaSet=dbrs
+##      NODE_ENV: local_development
+#      FORCE_COLOR: 3
+##      ROOM_CREATOR_SVC_URL: http://mocks:8082
+#    volumes:
+#      - ./apps/image/src:/app/apps/image/src
+##      - /app/apps/image/node_modules
+##      - /app/apps/image/dist
+##    ports:
+##      - 3020:3020
+#    expose:
+#      - 3020
+#  nginx:
+#    image: nginx:alpine
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf
+#    ports:
+#      - "3020:3020"
+#    depends_on:
+#      - legend
+#  adminer:
+#    image: adminer
+#    ports:
+#      - 8082:8080
+#    environment:
+#      - ADMINER_DESIGN=dracula
+#    depends_on:
+#      - db
   db:
     image: postgres
     environment:

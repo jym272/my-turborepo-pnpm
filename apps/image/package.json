@@ -5,7 +5,7 @@
   "main": "./dist/server.js",
   "private": true,
   "dependencies": {
-    "rabbit-mq11111": "^0.1.3",
+    "rabbit-mq11111": "workspace:*",
     "express-async-errors": "^3.1.1",
     "express": "latest",
     "@types/express": "latest"
@@ -19,7 +19,7 @@
   "scripts": {
     "build": "swc src -d dist",
     "lint": "eslint --ext .ts src",
-    "dev": "concurrently \"npm run watch-compile\" \"npm run watch-dev\"",
+    "dev": "concurrently \"pnpm run watch-compile\" \"pnpm run watch-dev\"",
     "watch-compile": "swc src -w --out-dir dist",
     "watch-dev": "nodemon --watch \"dist/**/*\" -e js ./dist/server.js"
   },

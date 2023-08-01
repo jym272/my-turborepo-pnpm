@@ -1,0 +1,29 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: ticketing
+build:
+  local:
+    push: false
+  artifacts:
+  - image: jym272/image-api
+    context: .
+    docker:
+      dockerfile: apps/image/dev.Dockerfile
+    sync:
+      manual:
+        # Sync all the javascript files that are in the src folder
+        # with the container src folder
+        - src: 'apps/image/src/**/*.ts'
+          dest: .
+manifests:
+  kustomize:
+    paths:
+    - k8s/base
+profiles:
+# doesn't work with multinodes https://github.com/GoogleContainerTools/skaffold/issues/5494
+- name: local
+  manifests:
+    kustomize:
+      paths:
+      - k8s/overlay/skaffold

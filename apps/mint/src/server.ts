@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { startRabbitMQ, consume } from 'rabbit-mq';
+import { startRabbitMQ, consume } from 'rabbit-mq11111';
 import { callback } from './MintConsumer';
 
 const app = express();

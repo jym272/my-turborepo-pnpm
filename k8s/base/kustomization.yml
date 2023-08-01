@@ -1,0 +1,31 @@
+resources:
+  - apis
+  - rabbitmq/rabbitmq.yaml
+#  - client/frontend.yaml
+#  - nats/statefulSet.yaml
+#  - redis/statefulSet.yaml
+configMapGenerator:
+  - name: app-config
+    literals: # https://github.com/chalk/supports-color/blob/e06f284193939fbc1c75992871cda2b8192557ec/index.js#L52
+      - FORCE_COLOR=3
+  - name: postgres-host
+    literals:
+      - POSTGRES_HOST_AUTH=db-auth.default.svc.cluster.local
+      - POSTGRES_HOST_ORDERS=pgpool-orders-svc.default.svc.cluster.local
+      - POSTGRES_HOST_PAYMENTS=db-payments.default.svc.cluster.local
+      - POSTGRES_HOST_TICKETS=pgpool-tickets-svc.default.svc.cluster.local
+# For updating the digest use the script  :
+# bash scripts/update_to_latest_digest [auth|expiration|orders|payments|tickets|frontend]
+#images:
+#  - name: jym272/ticketing-auth-api
+#    digest: sha256:f93e89aa1b8e1d2a6728dd6b0234aba655258a31b8b82486145ddde23f364bba
+#  - name: jym272/ticketing-expiration-api
+#    digest: sha256:03001c01e975bd5a3cf071dc328c0cf6b1a2e08bae3757590dc3755c90e71c83
+#  - name: jym272/ticketing-frontend
+#    digest: sha256:91bdc568409571b88fbfbf6ae065bda748544576762d562e18e843972f1c8f6a
+#  - name: jym272/ticketing-orders-api
+#    digest: sha256:0057639cfe46f3d04d7b64fab5e1a11947ce91405b44e1f5cd8e6498cbf07336
+#  - name: jym272/ticketing-tickets-api
+#    digest: sha256:cf700ce399c118e2cc8d281639069cb8232e4f81cda36843bce9c2d1fbcc152e
+#  - name: jym272/ticketing-payments-api
+#    digest: sha256:e12c7b0b353715abae827538b453c45347e951f6c55d5d731a9cb1aef3c88ad0

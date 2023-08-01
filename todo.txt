@@ -14,5 +14,14 @@ Cosas que son comunes y pueden ir en está librería
 
 - testear el saga y empezar la refactoirizacion del conusmer y el broker
 
+- ci flow in pr todas las actions!
+- realizar linting and testing
 // TODO: add MAX NACKING TIMES
 // TODO: test with varios container escuchando los misp¿mos rannbto
+// TODO: añadir coverage
+
+- completar saga
+- refactorizar
+- usar varios containers para probar
+- mantener la conexion abierta para el publish!, la conexion esta abierta para el subscribe!
+- concurrencia en varios container del saga

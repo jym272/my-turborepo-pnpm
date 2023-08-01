@@ -16,7 +16,7 @@
 
 import { getSequelizeClient, Saga } from '@/db';
 import { SagaStepResponse } from '@/Saga';
-import { Broker, sendToQueue2 } from 'rabbit-mq';
+import { Broker, sendToQueue2 } from 'rabbit-mq11111';
 
 const queues = {
     mint: {

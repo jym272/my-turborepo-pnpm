@@ -1,0 +1,7 @@
+resources:
+  - image.yaml
+#  - auth.yaml
+#  - expiration.yaml
+#  - orders.yaml
+#  - payments.yaml
+#  - tickets.yaml

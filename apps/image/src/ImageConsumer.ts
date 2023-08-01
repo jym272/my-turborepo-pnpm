@@ -1,7 +1,7 @@
 import { SagaStepResponse } from './types';
 import { createImage } from './actions';
 import { Channel, ConsumeMessage } from 'amqplib';
-import { nackWithDelay } from 'rabbit-mq';
+import { nackWithDelay } from 'rabbit-mq11111';
 import { imageQueue } from './server';
 
 const needToRequeueWithDelay = () => {

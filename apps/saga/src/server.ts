@@ -1,7 +1,7 @@
 import { ServerBuilder } from '@/builder';
 import { startSequelize } from '@/db';
 import { getEnvOrFail, log, logServerIsRunning } from 'utils';
-import { consume, startRabbitMQ, stopRabbitMQ } from 'rabbit-mq';
+import { consume, startRabbitMQ, stopRabbitMQ } from 'rabbit-mq11111';
 import { imageCallback, imageReplySagaQueue, mintCallback, mintReplySagaQueue } from '@/listeners';
 
 const replies = [imageReplySagaQueue, mintReplySagaQueue];

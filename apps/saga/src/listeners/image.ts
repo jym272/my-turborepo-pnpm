@@ -1,7 +1,7 @@
 import { ImageCommands, SagaStepResponse } from '@/Saga';
 import { continueNextStepSaga } from '@/Saga/DraftSaga/Saga';
 import { Channel, ConsumeMessage } from 'amqplib';
-import { nackWithDelay } from 'rabbit-mq';
+import { nackWithDelay } from 'rabbit-mq11111';
 
 const needToRequeueWithDelay = () => {
     return Math.random() >= 0.5;
