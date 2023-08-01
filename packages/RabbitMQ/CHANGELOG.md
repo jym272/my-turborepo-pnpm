@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.1.10
+
+### Patch Changes
+
+-   6ebdc1e: broker reuse connection and channel
+
 ## 0.1.9
 
 ### Patch Changes
