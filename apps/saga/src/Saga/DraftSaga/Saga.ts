@@ -20,12 +20,10 @@ import { sendToQueue } from 'rabbit-mq11111';
 
 const queues = {
     mint: {
-        name: 'mint_saga_commands',
-        routingKey: 'mint_micro'
+        name: 'mint_saga_commands'
     },
     image: {
-        name: 'image_saga_commands',
-        routingKey: 'image_micro_commands'
+        name: 'image_saga_commands'
     }
 };
 
