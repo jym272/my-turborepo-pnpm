@@ -1,5 +1,5 @@
 import { getSequelizeClient, Saga as SagaModel } from '@/db';
-import { Data, SagaStepResponse } from '@/Saga/types';
+import { MicroserviceCommand, SagaStepResponse } from '@/Saga/types';
 import { LinkedList } from '@/Saga/LinkedList';
 import { Saga } from '@/Saga/Process';
 
@@ -17,24 +17,9 @@ const createSaga = async () => {
     }
 };
 
-const dataForNodeInLinkedList: Data[] = [
-    {
-        command: 'create_image',
-        micro: 'image'
-    },
-    {
-        command: 'mint_image',
-        micro: 'mint'
-    },
-    {
-        command: 'update_token',
-        micro: 'image'
-    }
-];
-
 export class SagaManager {
-    public static processLinkedList = async () => {
-        const linkedList = LinkedList.buildLinkedList(dataForNodeInLinkedList);
+    public static process = async (commands: MicroserviceCommand[]) => {
+        const linkedList = LinkedList.buildLinkedList(commands);
         linkedList.head?.setCurrentStep();
         const saga = await this.createSaga(linkedList);
         console.log('Saga created');

@@ -1,4 +1,4 @@
-import { Data, LinkedListNode, NodeData } from '@/Saga';
+import { MicroserviceCommand, LinkedListNode, NodeData } from '@/Saga';
 
 export class LinkedList {
     head: LinkedListNode | null;
@@ -9,7 +9,7 @@ export class LinkedList {
         this.current = null; // Initialize the current pointer to null (not pointing to any node)
     }
 
-    appendData(data: Data) {
+    appendData(data: MicroserviceCommand) {
         //Default values
         const nodeData: NodeData = {
             ...data,
@@ -78,7 +78,7 @@ export class LinkedList {
             this.current = this.current.next;
         }
     }
-    public static buildLinkedList = (linkedListData: Data[]) => {
+    public static buildLinkedList = (linkedListData: MicroserviceCommand[]) => {
         const linkedList = new this();
         linkedListData.forEach(data => linkedList.appendData(data));
         return linkedList;
