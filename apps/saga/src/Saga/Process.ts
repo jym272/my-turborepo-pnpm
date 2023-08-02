@@ -1,16 +1,7 @@
-import { AvailableMicroservices, SagaStepResponse } from '@/Saga/types';
+import { queues, SagaStepResponse } from '@/Saga/types';
 import { LinkedList, LinkedListNode } from '@/Saga/LinkedList';
 import { sendToQueue } from 'rabbit-mq11111';
 import { getSequelizeClient, Saga as SagaModel } from '@/db';
-
-const queues: Record<AvailableMicroservices, Record<'name', string>> = {
-    mint: {
-        name: 'mint_saga_commands'
-    },
-    image: {
-        name: 'image_saga_commands'
-    }
-};
 
 const persistsStep = async (id: number, dataSaga: LinkedList) => {
     try {
@@ -34,7 +25,7 @@ export class Saga {
         this.currentStepNode = stepsList.traverseAndGetCurrentNode();
     }
 
-    public async startSaga() {
+    public async start() {
         if (this.currentStepNode === null) {
             console.log('No current step found.');
             return;
@@ -45,7 +36,7 @@ export class Saga {
         this.sendStepToQueue(this.currentStepNode);
     }
 
-    public async continueNextStep(response: SagaStepResponse): Promise<void> {
+    public async continue(response: SagaStepResponse): Promise<void> {
         const { status, payload } = response;
         const currentStep = this.currentStepNode;
         if (!currentStep) {

@@ -33,3 +33,12 @@ export const nodeDataDefaults: NodeDataDefaults = {
     status: 'pending',
     isCurrentStep: false
 };
+// TODO: refactor this, is weird
+export const queues: Record<AvailableMicroservices, Record<'name', string>> = {
+    mint: {
+        name: 'mint_saga_commands'
+    },
+    image: {
+        name: 'image_saga_commands'
+    }
+};

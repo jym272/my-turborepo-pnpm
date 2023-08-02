@@ -19,11 +19,11 @@ const createSaga = async () => {
 
 export class SagaManager {
     public static process = async (commands: MicroserviceCommand[]) => {
-        const linkedList = LinkedList.buildLinkedList(commands);
+        const linkedList = LinkedList.build(commands);
         linkedList.head?.setCurrentStep();
         const saga = await this.createSaga(linkedList);
         console.log('Saga created');
-        await saga.startSaga();
+        await saga.start();
         console.log('SagaProcess has begun', saga.sagaId);
     };
     public static async createSaga(steps: LinkedList): Promise<Saga> {
@@ -35,17 +35,19 @@ export class SagaManager {
         }
     }
 
-    public static continueNextStepSaga = async (response: SagaStepResponse) => {
+    // TODO: continue nextStep or previousStep -> if transaction in a step fails
+    public static continue = async (response: SagaStepResponse) => {
         const sagaModel = await this.getSaga(response.sagaId);
         const linkedList = LinkedList.jsonToLinkedList(sagaModel.dataSaga);
         const saga = new Saga(sagaModel.id, linkedList);
-        await saga.continueNextStep(response);
+        await saga.continue(response);
     };
 
     private static async createSagaInDatabase() {
         return await createSaga();
     }
 
+    // TODO: refactor -> getting also blocking and using a transaction!!
     private static getSaga = async (id: number) => {
         try {
             const saga = await SagaModel.findByPk(id);

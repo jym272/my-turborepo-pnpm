@@ -24,7 +24,7 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
                     switch (command) {
                         case 'create_image': //hardocoded -> use enums TODO
                             if (parsedMsg.status === 'completed') {
-                                void SagaManager.continueNextStepSaga(parsedMsg);
+                                void SagaManager.continue(parsedMsg);
                             } else {
                                 // pensar que hacer aca TODO
                                 console.log('ERROR', parsedMsg);
@@ -43,7 +43,7 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
                         case 'mint_image': //hardocoded -> use enums TODO
                             if (parsedMsg.status === 'completed') {
                                 console.log('MINTEANDO ANDO');
-                                void SagaManager.continueNextStepSaga(parsedMsg);
+                                void SagaManager.continue(parsedMsg);
                                 // void continueNextStepSaga(parsedMsg);
                                 // void Saga.continueNextStepSaga(parsedMsg);
                             } else {

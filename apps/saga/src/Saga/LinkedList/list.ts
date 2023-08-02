@@ -76,7 +76,7 @@ export class LinkedList {
             this.current = this.current.next;
         }
     }
-    public static buildLinkedList = (linkedListData: MicroserviceCommand[]) => {
+    public static build = (linkedListData: MicroserviceCommand[]) => {
         const linkedList = new this();
         linkedListData.forEach(data => linkedList.appendData(data));
         return linkedList;
