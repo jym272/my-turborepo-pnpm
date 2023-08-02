@@ -80,6 +80,7 @@ export class Saga {
         console.log(this.sagaId, this.stepsList.linkedListToJson());
         // puedo chequear el final pero tendria que actualizar antes de finalizar
         if (currentStep.next === null) {
+            // TODO: persist?
             console.log('Finished Saga: ', this.sagaId);
             return;
         }
@@ -88,10 +89,12 @@ export class Saga {
         this.sendStepToQueue(currentStep.next);
     }
 
+    // better name, actually all saga is persisted
     private async persistsSagaStep() {
         await persistsStep(this.sagaId, this.stepsList);
     }
 
+    // SEND oR SEND!!!  it cannot fail!, already persisted
     private sendStepToQueue(step: LinkedListNode): void {
         const { micro, command } = step.getData();
         const brokerData = queues[micro];
