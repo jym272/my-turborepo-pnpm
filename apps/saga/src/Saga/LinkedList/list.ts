@@ -1,59 +1,4 @@
-import { AvailableMicroservices } from '@/Saga/RefactorSaga2';
-// TODO: revisar bien los status de la maquina de estados
-// TODO: tanto en micros como en saga
-// TODO: tipear todo lo que haya que tipear
-type Status = 'pending' | 'success' | 'failure' | 'sent' | 'completed';
-export interface Data {
-    command: string;
-    micro: AvailableMicroservices;
-}
-
-export interface NodeData extends Data {
-    response: Record<string, any>;
-    status: Status;
-    isCurrentStep: boolean; // mas bien deberia ser una TODO PROP DE LA CLASE
-}
-// MAQUINA DE ESTADOS
-export class LinkedListNode {
-    data: NodeData;
-    // eslint-disable-next-line no-use-before-define
-    next: LinkedListNode | null;
-    // eslint-disable-next-line no-use-before-define
-    previous: LinkedListNode | null;
-
-    constructor(data: NodeData) {
-        this.data = {
-            ...data
-        };
-        this.next = null;
-        this.previous = null;
-    }
-
-    updateResponse(response: Record<string, any>) {
-        this.data.response = response;
-        return this;
-    }
-
-    updateStatus(status: Status) {
-        this.data.status = status;
-        return this;
-    }
-    setCurrentStep() {
-        this.data.isCurrentStep = true;
-        if (this.previous) {
-            this.previous.data.isCurrentStep = false;
-        }
-        return this;
-    }
-
-    getData() {
-        return this.data;
-    }
-
-    getResponse() {
-        return this.data.response;
-    }
-}
+import { Data, LinkedListNode, NodeData } from '@/Saga';
 
 export class LinkedList {
     head: LinkedListNode | null;
@@ -133,10 +78,9 @@ export class LinkedList {
             this.current = this.current.next;
         }
     }
+    public static buildLinkedList = (linkedListData: Data[]) => {
+        const linkedList = new this();
+        linkedListData.forEach(data => linkedList.appendData(data));
+        return linkedList;
+    };
 }
-//podría ser un static methdo en la calse LinkedList
-export const buildLinkedList = (linkedListData: Data[]) => {
-    const linkedList = new LinkedList();
-    linkedListData.forEach(data => linkedList.appendData(data));
-    return linkedList;
-};

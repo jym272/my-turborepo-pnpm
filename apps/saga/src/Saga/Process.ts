@@ -1,9 +1,7 @@
+import { AvailableMicroservices, SagaStepResponse } from '@/Saga/types';
+import { LinkedList, LinkedListNode } from '@/Saga/LinkedList';
 import { sendToQueue } from 'rabbit-mq11111';
 import { getSequelizeClient, Saga as SagaModel } from '@/db';
-import { buildLinkedList, Data, LinkedList, LinkedListNode } from '@/Saga/RefactorSaga2LinkedList';
-export type ImageCommands = 'create_image' | 'add_token_to_image';
-export type MintCommands = 'mint_image' | 'add_token_to_image';
-export type AvailableMicroservices = 'image' | 'mint';
 
 const queues: Record<AvailableMicroservices, Record<'name', string>> = {
     mint: {
@@ -11,27 +9,6 @@ const queues: Record<AvailableMicroservices, Record<'name', string>> = {
     },
     image: {
         name: 'image_saga_commands'
-    }
-};
-export interface SagaStepResponse {
-    microservice: 'image' | 'mint';
-    command: ImageCommands | MintCommands;
-    status: 'success' | 'failure' | 'completed';
-    sagaId: number;
-    payload: Record<string, any>;
-}
-
-const createSaga = async () => {
-    let newSaga: SagaModel;
-    try {
-        newSaga = await getSequelizeClient().transaction(async () => {
-            return await SagaModel.create({
-                dataSaga: {}
-            });
-        });
-        return newSaga;
-    } catch (err) {
-        throw Error("Can't create Saga");
     }
 };
 
@@ -105,68 +82,10 @@ export class Saga {
             payload: step.getResponse() // better name fro respponse TODO
         })
             .then(() => {
-                console.log(`Step "${step}" sent to queue.`);
+                console.log(`Step "${step.getData().command}" sent to queue.`);
             })
             .catch(error => {
                 console.error('Error sending step to queue:', error);
             });
     }
 }
-
-export class SagaManager {
-    public static async createSaga(steps: LinkedList): Promise<Saga> {
-        try {
-            const newSaga = await this.createSagaInDatabase();
-            return new Saga(newSaga.id, steps);
-        } catch (err) {
-            throw new Error("Can't create Saga");
-        }
-    }
-    public static continueNextStepSaga = async (response: SagaStepResponse) => {
-        const sagaModel = await this.getSaga(response.sagaId);
-        const linkedList = LinkedList.jsonToLinkedList(sagaModel.dataSaga);
-        const saga = new Saga(sagaModel.id, linkedList);
-        await saga.continueNextStep(response);
-    };
-
-    private static async createSagaInDatabase() {
-        return await createSaga();
-    }
-
-    private static getSaga = async (id: number) => {
-        try {
-            const saga = await SagaModel.findByPk(id);
-            if (!saga) {
-                throw Error("Can't find Saga");
-            }
-            return saga;
-        } catch (err) {
-            throw Error("Can't find Saga");
-        }
-    };
-}
-
-const dataForNodeInLinkedList: Data[] = [
-    {
-        command: 'create_image',
-        micro: 'image'
-    },
-    {
-        command: 'mint_image',
-        micro: 'mint'
-    },
-    {
-        command: 'update_token',
-        micro: 'image'
-    }
-];
-
-// TODO: esto puedo hacer el saga manger, metodos estáticos a todas las clases!
-export const SagaProcessLinkedList = async () => {
-    const linkedList = buildLinkedList(dataForNodeInLinkedList);
-    linkedList.head?.setCurrentStep();
-    const saga = await SagaManager.createSaga(linkedList);
-    console.log('Saga created');
-    await saga.startSaga();
-    console.log('SagaProcess has begun', saga.sagaId);
-};
