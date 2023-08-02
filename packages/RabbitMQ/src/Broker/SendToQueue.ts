@@ -10,6 +10,7 @@ const getSendChannel = async () => {
     return sendChannel;
 };
 
+// TODO: podría esperar el error
 export const sendToQueue = async <T extends Record<string, any>>(queueName: string, payload: T) => {
     // let connection;
     try {

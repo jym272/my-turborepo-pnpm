@@ -1,5 +1,4 @@
 import { AvailableMicroservices } from '@/Saga/RefactorSaga2';
-
 type Status = 'pending' | 'success' | 'failure' | 'sent' | 'completed';
 export interface Data {
     command: string;
@@ -9,6 +8,7 @@ export interface Data {
 interface NodeData extends Data {
     response: Record<string, any>;
     status: Status;
+    //isCurrentStep: boolean;
 }
 // MAQUINA DE ESTADOS
 export class LinkedListNode {
@@ -71,12 +71,23 @@ export class LinkedList {
     getCurrentNode(): LinkedListNode | null {
         return this.current;
     }
-    // setCurrent(node: LinkedListNode) {
-    //     this.current = node;
-    // }
-    // getHead() {
-    //     return this.head;
-    // }
+    linkedListToJson() {
+        const json: Record<string, any>[] = [];
+        let currentNode = this.head;
+        while (currentNode !== null) {
+            json.push(currentNode.getData());
+            currentNode = currentNode.next;
+        }
+        return json;
+    }
+
+    traverseAndConsoleLogData() {
+        let currentNode = this.head;
+        while (currentNode !== null) {
+            console.log(currentNode.data);
+            currentNode = currentNode.next;
+        }
+    }
     moveToNext() {
         if (this.current?.next) {
             this.current = this.current.next;

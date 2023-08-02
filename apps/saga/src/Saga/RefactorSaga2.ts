@@ -1,7 +1,7 @@
 import { sendToQueue } from 'rabbit-mq11111';
 import { getSequelizeClient, Saga as SagaModel } from '@/db';
 import { buildLinkedList, Data, LinkedList, LinkedListNode } from '@/Saga/RefactorSaga2LinkedList';
-
+import { parse, stringify, toJSON, fromJSON } from 'flatted';
 export type ImageCommands = 'create_image' | 'add_token_to_image';
 export type MintCommands = 'mint_image' | 'add_token_to_image';
 export type AvailableMicroservices = 'image' | 'mint';
@@ -36,16 +36,18 @@ const createSaga = async () => {
     }
 };
 
-const updateSagaStepSate = async (id: number, dataSaga: LinkedList) => {
+const persistsStep = async (id: number, dataSaga: LinkedList) => {
+    console.log('2', dataSaga.linkedListToJson());
     try {
         await getSequelizeClient().transaction(async () => {
             const saga = await SagaModel.findByPk(id);
             if (!saga) {
                 throw Error("Can't find Saga");
             }
-            await saga.update({ dataSaga });
+            await saga.update({ dataSaga: dataSaga.linkedListToJson() });
         });
     } catch (err) {
+        console.log(err);
         throw Error("Can't update Saga");
     }
 };
@@ -59,7 +61,7 @@ export class Saga {
 
     public async startSaga() {
         this.currentStepNode?.updateStatus('sent');
-        await this.updateSagaStepState();
+        await this.persistsSagaStep();
         this.sendCurrentStepToQueue();
     }
 
@@ -81,12 +83,12 @@ export class Saga {
         }
         this.currentStepNode = currentStep.next; //UPDATING NEXT CURRENT STEP!!!
         this.currentStepNode.updateStatus('sent');
-        await this.updateSagaStepState();
+        await this.persistsSagaStep();
         this.sendCurrentStepToQueue();
     }
 
-    private async updateSagaStepState() {
-        await updateSagaStepSate(this.sagaId, this.stepsList);
+    private async persistsSagaStep() {
+        await persistsStep(this.sagaId, this.stepsList);
     }
 
     private sendCurrentStepToQueue(): void {
@@ -154,14 +156,14 @@ const getSaga = async (id: number) => {
         throw Error("Can't find Saga");
     }
 };
-export const continueNextStepSaga = async (response: SagaStepResponse) => {
+export const continueNextStepSaga2 = async (response: SagaStepResponse) => {
     const thisSaga = await getSaga(response.sagaId);
 };
 
-export const SagaProcess = async () => {
+export const SagaProcessLinkedList = async () => {
     const linkedList = buildLinkedList(dataForNodeInLinkedList);
     const saga = await SagaManager.createSaga(linkedList);
-    console.log('Saga created:', saga);
+    console.log('Saga created');
     await saga.startSaga();
     console.log('SagaProcess has begun', saga.sagaId);
 };

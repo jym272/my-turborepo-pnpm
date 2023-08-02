@@ -5,27 +5,27 @@
   "main": "./dist/server.js",
   "private": true,
   "dependencies": {
+    "@types/express": "latest",
     "axios": "latest",
-    "pg": "^8.11.1",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.32.1",
     "cls-hooked": "^4.2.2",
-    "express-async-errors": "^3.1.1",
     "cors": "^2.8.5",
     "cors-anywhere": "^0.4.4",
-    "utils": "workspace:*",
-    "rabbit-mq11111": "workspace:*",
     "express": "latest",
-    "@types/express": "latest"
+    "express-async-errors": "^3.1.1",
+    "pg": "^8.11.1",
+    "pg-hstore": "^2.3.4",
+    "rabbit-mq11111": "workspace:*",
+    "sequelize": "^6.32.1",
+    "utils": "workspace:*"
   },
   "devDependencies": {
-    "@types/pg": "^8.10.2",
-    "@types/cors": "^2.8.13",
+    "@types/amqplib": "latest",
     "@types/cls-hooked": "^4.3.3",
-    "eslint-config-custom": "workspace:*",
-    "tsconfig": "workspace:*",
+    "@types/cors": "^2.8.13",
+    "@types/pg": "^8.10.2",
     "amqplib": "latest",
-    "@types/amqplib": "latest"
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*"
   },
   "scripts": {
     "build": "swc src -d dist",
