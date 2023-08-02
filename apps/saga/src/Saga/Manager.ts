@@ -1,7 +1,7 @@
 import { getSequelizeClient, Saga as SagaModel } from '@/db';
 import { MicroserviceCommand, SagaStepResponse } from '@/Saga/types';
 import { LinkedList } from '@/Saga/LinkedList';
-import { Saga } from '@/Saga/Process';
+import { SagaProcess } from '@/Saga/Process';
 
 const createSaga = async () => {
     let newSaga: SagaModel;
@@ -26,10 +26,10 @@ export class SagaManager {
         await saga.start();
         console.log('SagaProcess has begun', saga.sagaId);
     };
-    public static async createSaga(steps: LinkedList): Promise<Saga> {
+    public static async createSaga(steps: LinkedList): Promise<SagaProcess> {
         try {
             const newSaga = await this.createSagaInDatabase();
-            return new Saga(newSaga.id, steps);
+            return new SagaProcess(newSaga.id, steps);
         } catch (err) {
             throw new Error("Can't create Saga");
         }
@@ -39,7 +39,7 @@ export class SagaManager {
     public static continue = async (response: SagaStepResponse) => {
         const sagaModel = await this.getSaga(response.sagaId);
         const linkedList = LinkedList.jsonToLinkedList(sagaModel.dataSaga);
-        const saga = new Saga(sagaModel.id, linkedList);
+        const saga = new SagaProcess(sagaModel.id, linkedList);
         await saga.continue(response);
     };
 

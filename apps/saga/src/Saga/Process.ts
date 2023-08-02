@@ -18,7 +18,7 @@ const persistsStep = async (id: number, dataSaga: LinkedList) => {
     }
 };
 
-export class Saga {
+export class SagaProcess {
     private readonly currentStepNode: LinkedListNode | null;
 
     constructor(public sagaId: number, public stepsList: LinkedList) {
