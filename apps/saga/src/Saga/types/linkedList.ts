@@ -1,3 +1,5 @@
+//refactor all this in types in main
+
 export type ImageCommands = 'create_image';
 export type MintCommands = 'mint_image' | 'update_token';
 export type Command = ImageCommands | MintCommands;
@@ -12,13 +14,22 @@ export interface SagaStepResponse {
 }
 
 export type Status = 'pending' | 'success' | 'failure' | 'sent' | 'completed';
+
 export interface MicroserviceCommand {
     command: Command;
     micro: AvailableMicroservices;
 }
 
-export interface NodeData extends MicroserviceCommand {
+export interface NodeDataDefaults {
     response: Record<string, any>;
     status: Status;
-    isCurrentStep: boolean; // mas bien deberia ser una TODO PROP DE LA CLASE
+    isCurrentStep: boolean;
 }
+
+export interface NodeData extends MicroserviceCommand, NodeDataDefaults {}
+
+export const nodeDataDefaults: NodeDataDefaults = {
+    response: {},
+    status: 'pending',
+    isCurrentStep: false
+};

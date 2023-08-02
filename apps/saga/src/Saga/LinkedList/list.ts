@@ -1,4 +1,4 @@
-import { MicroserviceCommand, LinkedListNode, NodeData } from '@/Saga';
+import { MicroserviceCommand, LinkedListNode, NodeData, nodeDataDefaults } from '@/Saga';
 
 export class LinkedList {
     head: LinkedListNode | null;
@@ -13,9 +13,7 @@ export class LinkedList {
         //Default values
         const nodeData: NodeData = {
             ...data,
-            response: {},
-            status: 'pending',
-            isCurrentStep: false
+            ...nodeDataDefaults
         };
         this.append(new LinkedListNode(nodeData));
     }
