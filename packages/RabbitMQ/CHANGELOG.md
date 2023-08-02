@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.1.11
+
+### Patch Changes
+
+-   4db8304: console.log removed from nacking
+
 ## 0.1.10
 
 ### Patch Changes
