@@ -15,7 +15,7 @@ export const nackWithDelay = (
     if (msg.properties.headers['x-death']) {
         count = msg.properties.headers['x-death'][0].count;
     }
-    console.log('nacking', msg.properties.headers['x-death'], { count });
+    // console.log('nacking', msg.properties.headers['x-death'], { count });
 
     // TODO: x-death es un arreglo, si la lógica cambia en el desarrollo, el nacking count se implementa
     // TODO: usando un header custom, no x-death, importante, pasar los headers al publish, de otra manera

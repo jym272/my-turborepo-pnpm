@@ -7,39 +7,36 @@ const waitWithMessage = async (msg: string, time: number) => {
 };
 
 const replySagaQueue = {
-    name: 'reply_to_saga',
-    routingKey: 'image_micro' // no se usa por ahora
-};
-
-const updateSaga = async (sagaId: string, payload: Record<string, any>) => {
-    const sagaResponse: SagaStepResponse = {
-        microservice: 'image',
-        sagaId,
-        command: 'create_image', // los comandos terminan siendo pasos de un saga
-        status: 'completed',
-        payload
-    };
-
-    await sendToQueue(replySagaQueue.name, sagaResponse);
-    console.log('RESULT IMAGE:  Reply sent to saga');
+    name: 'reply_to_saga'
 };
 
 export const createImage = async (sagaId: string) => {
-    console.log('CREATE IMAGE');
-
+    console.log('CREATE IMAGE HAS BEGUN');
     await waitWithMessage('Image Created', 2000);
-    // tengo que actualizar el estado del SAGA, saga ID
-    const random = Math.random();
-    await updateSaga(sagaId, { imageId: random });
+
+    const sagaResponse: SagaStepResponse = {
+        microservice: 'image',
+        sagaId,
+        command: 'create_image',
+        status: 'completed',
+        payload: { imageId: Math.random() }
+    };
+
+    await sendToQueue(replySagaQueue.name, sagaResponse);
+    console.log('createImage:  Reply sent to saga');
 };
 
 export const updateToken = async (sagaId: string) => {
-    console.log('Update Token in image micro');
+    console.log('UPDATE TOKEN HAS BEGUN');
 
     await waitWithMessage('Updating Successful', 2000);
-    // tengo que actualizar el estado del SAGA, saga ID
-    const random = Math.random();
-    await updateSaga(sagaId, { imageId: random });
+    const sagaResponse: SagaStepResponse = {
+        microservice: 'image',
+        sagaId,
+        command: 'update_token',
+        status: 'completed',
+        payload: { imageId: Math.random() } // el payload es usado en el paso siguiente
+    };
+    await sendToQueue(replySagaQueue.name, sagaResponse);
+    console.log('updateToken:  Reply sent to saga');
 };
-// que es lo ultimo que tiene perisitencia en el saga -> es el last step proicessed
-// entonces cualquier respuesta que regrese va  aser reliacionada con el

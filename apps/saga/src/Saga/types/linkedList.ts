@@ -1,7 +1,7 @@
-//refactor all this in types in main
+// TODO: refactor all this in types in main
 
-export type ImageCommands = 'create_image';
-export type MintCommands = 'mint_image' | 'update_token';
+export type ImageCommands = 'create_image' | 'update_token';
+export type MintCommands = 'mint_image';
 export type Command = ImageCommands | MintCommands;
 export type AvailableMicroservices = 'image' | 'mint';
 

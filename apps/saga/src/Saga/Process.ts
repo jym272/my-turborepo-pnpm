@@ -73,7 +73,7 @@ export class SagaProcess {
             payload: step.getResponse() // better name fro respponse TODO
         })
             .then(() => {
-                console.log(`Step "${step.getData().command}" sent to queue.`);
+                console.log(`sagaId: ${this.sagaId} - Step ${step.getData().command} sent to queue.`);
             })
             .catch(error => {
                 console.error('Error sending step to queue:', error);

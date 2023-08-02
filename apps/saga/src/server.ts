@@ -2,7 +2,7 @@ import { ServerBuilder } from '@/builder';
 import { startSequelize } from '@/db';
 import { getEnvOrFail, log, logServerIsRunning } from 'utils';
 import { consume, startRabbitMQ, stopRabbitMQ } from 'rabbit-mq11111';
-import { callback } from '@/listeners';
+import { callback } from '@/Saga';
 
 const replySagaQueue = {
     queueName: 'reply_to_saga',
