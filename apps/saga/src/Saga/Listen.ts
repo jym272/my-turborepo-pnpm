@@ -27,29 +27,16 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
 
     const { microservice } = parsedMsg;
 
+    let itCanBeHandled = false;
+
     switch (microservice) {
         case 'image': {
             const command = parsedMsg.command as ImageCommands;
             switch (command) {
                 case 'create_image':
-                    if (parsedMsg.status === 'completed') {
-                        void SagaManager.continue(parsedMsg);
-                    } else {
-                        // pensar que hacer aca TODO
-                        console.log('ERROR', parsedMsg);
-                    }
-                    break;
                 case 'update_token':
-                    if (parsedMsg.status === 'completed') {
-                        void SagaManager.continue(parsedMsg);
-                    } else {
-                        // pensar que hacer aca TODO
-                        console.log('ERROR', parsedMsg);
-                    }
+                    itCanBeHandled = true;
                     break;
-                default:
-                    console.log('DEFAULT CMD', command);
-                    return channel.nack(msg, false, false);
             }
             break;
         }
@@ -57,22 +44,22 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
             const command = parsedMsg.command as MintCommands;
             switch (command) {
                 case 'mint_image':
-                    if (parsedMsg.status === 'completed') {
-                        void SagaManager.continue(parsedMsg);
-                    } else {
-                        // pensar que hacer aca TODO
-                        console.log('ERROR', parsedMsg);
-                    }
+                    itCanBeHandled = true;
                     break;
-                default:
-                    console.log('DEFAULT CMD', command);
-                    return channel.nack(msg, false, false);
             }
             break;
         }
-        default:
-            console.error('DEFAULT MICRO', microservice);
-            break;
     }
-    channel.ack(msg);
+    if (itCanBeHandled) {
+        if (parsedMsg.status === 'completed') {
+            void SagaManager.continue(parsedMsg);
+            channel.ack(msg);
+        } else {
+            // TODO: manejar otro estado
+            console.log('ERROR', parsedMsg);
+            channel.nack(msg, false, false);
+        }
+        return;
+    }
+    return channel.nack(msg, false, false);
 };
