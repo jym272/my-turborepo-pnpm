@@ -3,6 +3,7 @@ import { continueNextStepSaga } from '@/Saga/DraftSaga/Saga';
 import { Channel, ConsumeMessage } from 'amqplib';
 import { nackWithDelay } from 'rabbit-mq11111';
 import { Saga } from '@/Saga/RefactorSaga';
+import { SagaManager } from '@/Saga/RefactorSaga2';
 
 const needToRequeueWithDelay = () => {
     return Math.random() >= 0.9;
@@ -26,7 +27,8 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
                     switch (command) {
                         case 'create_image': //hardocoded -> use enums TODO
                             if (parsedMsg.status === 'completed') {
-                                void continueNextStepSaga(parsedMsg);
+                                void SagaManager.continueNextStepSaga(parsedMsg);
+                                // void continueNextStepSaga(parsedMsg);
                                 // void Saga.continueNextStepSaga(parsedMsg);
                             } else {
                                 // pensar que hacer aca TODO
@@ -46,7 +48,8 @@ export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
                         case 'mint_image': //hardocoded -> use enums TODO
                             if (parsedMsg.status === 'completed') {
                                 console.log('MINTEANDO ANDO');
-                                void continueNextStepSaga(parsedMsg);
+                                void SagaManager.continueNextStepSaga(parsedMsg);
+                                // void continueNextStepSaga(parsedMsg);
                                 // void Saga.continueNextStepSaga(parsedMsg);
                             } else {
                                 // pensar que hacer aca TODO
