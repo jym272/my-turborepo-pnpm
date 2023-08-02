@@ -1,4 +1,7 @@
 import { AvailableMicroservices } from '@/Saga/RefactorSaga2';
+// TODO: revisar bien los status de la maquina de estados
+// TODO: tanto en micros como en saga
+// TODO: tipear todo lo que haya que tipear
 type Status = 'pending' | 'success' | 'failure' | 'sent' | 'completed';
 export interface Data {
     command: string;

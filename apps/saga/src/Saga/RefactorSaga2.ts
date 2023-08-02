@@ -36,7 +36,6 @@ const createSaga = async () => {
 };
 
 const persistsStep = async (id: number, dataSaga: LinkedList) => {
-    console.log('2', dataSaga.linkedListToJson());
     try {
         await getSequelizeClient().transaction(async () => {
             const saga = await SagaModel.findByPk(id);
@@ -64,6 +63,7 @@ export class Saga {
             return;
         }
         this.currentStepNode.updateStatus('sent');
+        // TODO: esto dos es un solo proceso!!!
         await this.persistsSagaStep();
         this.sendStepToQueue(this.currentStepNode);
     }
@@ -77,14 +77,14 @@ export class Saga {
         }
 
         currentStep.updateStatus(status).updateResponse(payload);
-
+        console.log(this.sagaId, this.stepsList.linkedListToJson());
         // puedo chequear el final pero tendria que actualizar antes de finalizar
         if (currentStep.next === null) {
-            console.log('Finished Saga.');
+            console.log('Finished Saga: ', this.sagaId);
             return;
         }
         currentStep.next.updateStatus('sent').setCurrentStep();
-        await this.persistsSagaStep();
+        await this.persistsSagaStep(); //siempre tendría que ser persist and sedn!"
         this.sendStepToQueue(currentStep.next);
     }
 
@@ -158,6 +158,7 @@ const dataForNodeInLinkedList: Data[] = [
     }
 ];
 
+// TODO: esto puedo hacer el saga manger, metodos estáticos a todas las clases!
 export const SagaProcessLinkedList = async () => {
     const linkedList = buildLinkedList(dataForNodeInLinkedList);
     linkedList.head?.setCurrentStep();
