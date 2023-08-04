@@ -11,6 +11,7 @@ const needToRequeueWithDelay = () => {
 const parseData = <T>(msg: ConsumeMessage) => {
     return JSON.parse(msg.content.toString()) as T;
 };
+//Refactoriza: añadir un emmit, also el contrato lo fijo, yo, no tiene sentido que lo haga el consumer
 
 export const callback = (msg: ConsumeMessage | null, channel: Channel) => {
     if (!msg) return; // OJO

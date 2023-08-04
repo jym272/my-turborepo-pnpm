@@ -1,6 +1,7 @@
-import express, { Request, Response } from 'express';
-import { startRabbitMQ, consume } from 'rabbit-mq11111';
-import { callback } from './MintConsumer';
+import express, { Request, Response } from 'express'; // TODO: añadir tipose de esta manera
+import { startRabbitMQ, consumeWithParsing, ConsumerEvents } from 'rabbit-mq11111';
+import mitt from 'mitt';
+import { AvailableMicroservices, MintCommands } from 'rabbit-mq11111/dist/@types';
 
 const app = express();
 const port = 3022;
@@ -21,6 +22,14 @@ export const mintQueue = {
 
 app.listen(port, async () => {
     await startRabbitMQ('amqp://rabbit:1234@localhost:5672', [mintQueue]);
-    void consume(mintQueue.queueName, callback);
+    // void consume(mintQueue.queueName, callback);
+    void consumeWithParsing<AvailableMicroservices.Mint>(mintQueue.queueName);
+    const emitter = mitt<ConsumerEvents<AvailableMicroservices.Mint>>();
+
+    emitter.on(MintCommands.MintImage, data => {
+        // Handle the 'createImage' event
+        console.log('Received MINTING COMMAND ORDER:', data);
+        // Perform actions based on the data (sagaId and payload) received in the event
+    });
     log(`Server is running on http://localhost:${port}`);
 });

@@ -94,6 +94,9 @@ importers:
       express-async-errors:
         specifier: ^3.1.1
         version: 3.1.1(express@4.18.2)
+      mitt:
+        specifier: latest
+        version: 3.0.1
       rabbit-mq11111:
         specifier: workspace:*
         version: link:../../packages/RabbitMQ
@@ -180,6 +183,9 @@ importers:
       amqplib:
         specifier: latest
         version: 0.10.3
+      mitt:
+        specifier: latest
+        version: 3.0.1
     devDependencies:
       eslint-config-custom:
         specifier: workspace:*
@@ -3633,6 +3639,10 @@ packages:
   /minipass@7.0.2:
     resolution: {integrity: sha512-eL79dXrE1q9dBbDCLg7xfn/vl7MS4F1gvJAgjJrQli/jbQWdUttuVawphqpffoIYfRdq78LHx6GP4bU/EQ2ATA==}
     engines: {node: '>=16 || 14 >=14.17'}
+    dev: false
+
+  /mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
     dev: false
 
   /mixme@0.5.9:

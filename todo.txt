@@ -20,8 +20,6 @@ Cosas que son comunes y pueden ir en está librería
 // TODO: test with varios container escuchando los misp¿mos rannbto
 // TODO: añadir coverage
 
-- completar saga
-- refactorizar
 - usar varios containers para probar
 - concurrencia en varios container del saga -> relacion con postgresql
-- unificar el reply -> el saga escucha en un solo canal! -> reply channel -> tambien tiene un solo requeueu channel
+- añadir comentarios a todo el paquete de RabbitmQ

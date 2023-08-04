@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "amqplib": "latest",
-    "@types/amqplib": "latest"
+    "@types/amqplib": "latest",
+    "mitt": "latest"
   },
   "devDependencies": {
     "tsconfig": "workspace:*",
@@ -29,7 +30,8 @@
   },
   "peerDependencies": {
     "amqplib": ">=0.10.3",
-    "@types/amqplib": ">=0.10.1"
+    "@types/amqplib": ">=0.10.1",
+    "mitt": ">=3.0.1"
   },
   "tsup": {
     "entry": [
