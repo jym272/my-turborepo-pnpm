@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.1.12
+
+### Patch Changes
+
+-   aaa8a93: testeando
+
 ## 0.1.11
 
 ### Patch Changes
