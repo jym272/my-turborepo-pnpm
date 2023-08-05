@@ -9,7 +9,7 @@ const waitWithMessage = async (msg: string, time: number) => {
 const replySagaQueue = {
     name: 'reply_to_saga'
 };
-
+// TODO: adentro del obkjecto del emmit!!!!
 const updateSaga = async (sagaId: string, payload: Record<string, any>) => {
     const sagaResponse: SagaStepResponse = {
         microservice: 'mint',

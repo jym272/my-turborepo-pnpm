@@ -25,6 +25,7 @@ export const getRabbitMQConn = () => {
     return conn;
 };
 
+// TODO: no exportarlo asi, lo puednen romper al rpoigema !"
 export const getConsumeChannel = () => {
     if (consumeChannel === null) {
         throw new Error('RabbitMQ channel not initialized.');

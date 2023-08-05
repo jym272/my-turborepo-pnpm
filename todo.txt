@@ -23,3 +23,5 @@ Cosas que son comunes y pueden ir en está librería
 - usar varios containers para probar
 - concurrencia en varios container del saga -> relacion con postgresql
 - añadir comentarios a todo el paquete de RabbitmQ
+- demonio que vigiel quje los sagas se coimpleten, un proceso en el saga puede nack y queado el saga pednientge ahi!
+- se puiede usar redis por ejemplo para regresar con el tiempo!!! -agregar

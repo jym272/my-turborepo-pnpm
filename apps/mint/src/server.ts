@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'; // TODO: añadir tipose de esta manera
-import { startRabbitMQ, consumeWithParsing, ConsumerEvents } from 'rabbit-mq11111';
-import mitt from 'mitt';
+import { startRabbitMQ, consumeWithParsing } from 'rabbit-mq11111';
 import { AvailableMicroservices, MintCommands } from 'rabbit-mq11111/dist/@types';
+import { mintImage } from './actions';
 
 const app = express();
 const port = 3022;
@@ -20,16 +20,23 @@ export const mintQueue = {
     exchange: 'commands_exchange'
 };
 
+const needToRequeueWithDelay = () => {
+    return Math.random() >= 0.3;
+};
+
 app.listen(port, async () => {
     await startRabbitMQ('amqp://rabbit:1234@localhost:5672', [mintQueue]);
-    // void consume(mintQueue.queueName, callback);
-    void consumeWithParsing<AvailableMicroservices.Mint>(mintQueue.queueName);
-    const emitter = mitt<ConsumerEvents<AvailableMicroservices.Mint>>();
+    const emitter = await consumeWithParsing<AvailableMicroservices.Mint>(mintQueue.queueName);
 
-    emitter.on(MintCommands.MintImage, data => {
+    emitter.on(MintCommands.MintImage, ({ channel, sagaId, payload }) => {
         // Handle the 'createImage' event
-        console.log('Received MINTING COMMAND ORDER:', data);
-        // Perform actions based on the data (sagaId and payload) received in the event
+        if (needToRequeueWithDelay()) {
+            console.log('NACKKK');
+            channel.nackWithDelayAndRetries();
+        } else {
+            void mintImage(`${sagaId}`, payload);
+            channel.ackMessage();
+        }
     });
     log(`Server is running on http://localhost:${port}`);
 });
