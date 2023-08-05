@@ -1,7 +1,8 @@
 import * as amqp from 'amqplib';
 import amqplib from 'amqplib';
 import { QueueConsumerProps } from './@types/rabbit-mq';
-import { createConsumers } from './Consumer';
+import { consumeWithParsing, createConsumers } from './Consumer';
+import { AvailableMicroservices } from './@types';
 
 let conn: amqp.Connection | null = null;
 let consumeChannel: amqp.Channel | null = null;
@@ -32,12 +33,27 @@ export const getConsumeChannel = () => {
     }
     return consumeChannel;
 };
-
+// const mintQueue = {
+//     queueName: 'mint_saga_commands',
+//     exchange: 'commands_exchange'
+// };
 export const startRabbitMQ = async (url: string, consumers: QueueConsumerProps[]) => {
     conn = await amqplib.connect(url);
     consumeChannel = await conn.createChannel();
     await createConsumers(consumers);
     saveUri(url);
+};
+
+export const startRabbitMQ2 = async <T extends AvailableMicroservices>(url: string, micro: T) => {
+    conn = await amqplib.connect(url);
+    consumeChannel = await conn.createChannel();
+    const queue = {
+        queueName: `${micro}_saga_commands`,
+        exchange: 'commands_exchange'
+    };
+    await createConsumers([queue]);
+    saveUri(url);
+    return await consumeWithParsing<T>(queue.queueName);
 };
 
 export const stopRabbitMQ = async () => {

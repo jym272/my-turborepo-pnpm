@@ -36,7 +36,7 @@ export type ConsumerEvents<T extends AvailableMicroservices> = {
     [key in CommandMap[T]]: { sagaId: number; payload: Record<string, any>; channel: ConsumeChannel };
 };
 
-export const callback = <T extends AvailableMicroservices>(
+const callback = <T extends AvailableMicroservices>(
     msg: ConsumeMessage | null,
     channel: Channel,
     e: Emitter<ConsumerEvents<T>>,

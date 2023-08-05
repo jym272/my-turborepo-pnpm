@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'; // TODO: añadir tipose de esta manera
-import { startRabbitMQ, consumeWithParsing } from 'rabbit-mq11111';
+import { startRabbitMQ2 } from 'rabbit-mq11111';
 import { AvailableMicroservices, MintCommands } from 'rabbit-mq11111/dist/@types';
 import { mintImage } from './actions';
 
@@ -25,16 +25,15 @@ const needToRequeueWithDelay = () => {
 };
 
 app.listen(port, async () => {
-    await startRabbitMQ('amqp://rabbit:1234@localhost:5672', [mintQueue]);
-    const emitter = await consumeWithParsing<AvailableMicroservices.Mint>(mintQueue.queueName);
+    const emitter = await startRabbitMQ2('amqp://rabbit:1234@localhost:5672', AvailableMicroservices.Mint);
 
-    emitter.on(MintCommands.MintImage, ({ channel, sagaId, payload }) => {
+    emitter.on(MintCommands.MintImage, async ({ channel, sagaId, payload }) => {
         // Handle the 'createImage' event
         if (needToRequeueWithDelay()) {
             console.log('NACKKK');
             channel.nackWithDelayAndRetries();
         } else {
-            void mintImage(`${sagaId}`, payload);
+            await mintImage(`${sagaId}`, payload);
             channel.ackMessage();
         }
     });
