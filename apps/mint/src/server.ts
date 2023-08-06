@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
-import { startRabbitMQ, consume } from 'rabbit-mq11111';
-import { callback } from './MintConsumer';
+import { connectToSagaCommandEmitter, MintCommands, AvailableMicroservices } from 'rabbit-mq11111';
 
 const app = express();
 const port = 3022;
@@ -19,8 +18,27 @@ export const mintQueue = {
     exchange: 'commands_exchange'
 };
 
+/*const needToRequeueWithDelay = () => {
+    return Math.random() >= 0.3;
+};*/
+const waitWithMessage = async (msg: string, time: number) => {
+    await new Promise(resolve => setTimeout(resolve, time));
+    console.log(msg);
+};
 app.listen(port, async () => {
-    await startRabbitMQ('amqp://rabbit:1234@localhost:5672', [mintQueue]);
-    void consume(mintQueue.queueName, callback);
+    const emitter = await connectToSagaCommandEmitter('amqp://rabbit:1234@localhost:5672', AvailableMicroservices.Mint);
+
+    emitter.on(MintCommands.MintImage, async ({ channel, sagaId, payload }) => {
+        // Handle the 'createImage' event
+        // if (needToRequeueWithDelay()) {
+        //     console.log('NACKKK');
+        //     channel.nackWithDelayAndRetries();
+        // } else {
+        console.log(`${MintCommands.MintImage}`, { payload, sagaId });
+
+        await waitWithMessage('IMAGE MINTED', 1000);
+        channel.ackMessage({ tokenId: Math.random() });
+        // }
+    });
     log(`Server is running on http://localhost:${port}`);
 });
