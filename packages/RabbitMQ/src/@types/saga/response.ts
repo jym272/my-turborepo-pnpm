@@ -1,5 +1,6 @@
 import { ImageCommands, MintCommands } from './commands';
 import { AvailableMicroservices } from './microservices';
+import ConsumeChannel from '../../Consumer/channels/Consume';
 
 export enum Status {
     Pending = 'pending',
@@ -22,3 +23,7 @@ export interface SagaStep<T extends AvailableMicroservices> {
     previousPayload: Record<string, any>;
     isCurrentStep: boolean;
 }
+
+export type ConsumerEvents<T extends AvailableMicroservices> = {
+    [key in CommandMap[T]]: { sagaId: number; payload: Record<string, any>; channel: ConsumeChannel<T> };
+};

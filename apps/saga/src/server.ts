@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { ImageCommands, startGlobalSagaListener } from 'rabbit-mq11111';
+import { startGlobalSagaListener } from 'rabbit-mq11111';
 
 const app = express();
 const port = 3050;
@@ -19,7 +19,7 @@ app.listen(port, async () => {
     e.on('*', (command, data) => {
         const { channel, sagaId, payload } = data;
         console.log({ command, sagaId, payload });
-        channel.nackWithDelayAndRetries(100, 100);
+        channel.nackWithDelayAndRetries(5000, 100);
     });
 
     log(`Server is running on http://localhost:${port}`);

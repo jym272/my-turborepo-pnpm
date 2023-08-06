@@ -1,6 +1,8 @@
 import { QueueConsumerProps } from '../@types/rabbit-mq';
 import { REQUEUE_EXCHANGE } from '../constants';
 import { getConsumeChannel } from '../Connections';
+import { AvailableMicroservices, ConsumerEvents } from '../@types';
+import mitt, { Emitter } from 'mitt';
 
 export const createConsumers = async (consumers: QueueConsumerProps[]) => {
     const channel = await getConsumeChannel();
@@ -21,4 +23,8 @@ export const createConsumers = async (consumers: QueueConsumerProps[]) => {
         await channel.bindQueue(requeueQueue, REQUEUE_EXCHANGE, routingKey);
         await channel.prefetch(1); // process only one message at a time
     }
+};
+
+export const createEmitter = <T extends AvailableMicroservices>(): Emitter<ConsumerEvents<T>> => {
+    return mitt<ConsumerEvents<T>>();
 };

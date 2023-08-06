@@ -1,7 +1,7 @@
 import { AvailableMicroservices } from '../@types';
 import { getRabbitMQConn, saveUri } from './rabbitConn';
 import { getConsumeChannel } from './consumeChannel';
-import { consumeWithParsing, createConsumers } from '../Consumer';
+import { consume, createConsumers, microserviceConsumeCallback, sagaConsumeCallback } from '../Consumer';
 
 const prepare = async (url: string) => {
     saveUri(url);
@@ -16,7 +16,7 @@ export const startGlobalSagaListener = async (url: string) => {
         exchange: 'reply_exchange'
     };
     await createConsumers([queue]);
-    return await consumeWithParsing(queue.queueName);
+    return await consume(queue.queueName, sagaConsumeCallback);
 };
 
 export const connectToSagaCommandEmitter = async <T extends AvailableMicroservices>(url: string, micro: T) => {
@@ -26,5 +26,5 @@ export const connectToSagaCommandEmitter = async <T extends AvailableMicroservic
         exchange: 'commands_exchange'
     };
     await createConsumers([queue]);
-    return await consumeWithParsing<T>(queue.queueName);
+    return await consume<T>(queue.queueName, microserviceConsumeCallback);
 };
