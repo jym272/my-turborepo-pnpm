@@ -1,14 +1,14 @@
 import { ConsumeMessage } from 'amqplib';
 import { MAX_NACK_RETRIES, NACKING_DELAY_MS, REQUEUE_EXCHANGE } from '../constants';
-import { getConsumeChannel } from '../connection';
+import { getConsumeChannel } from '../Connections';
 
-export const nackWithDelay = (
+export const nackWithDelay = async (
     msg: ConsumeMessage,
     queueName: string,
     delay = NACKING_DELAY_MS,
     maxRetries = MAX_NACK_RETRIES
 ) => {
-    const channel = getConsumeChannel();
+    const channel = await getConsumeChannel();
     channel.nack(msg, false, false); // nack without requeueing immediately
 
     let count = 0;

@@ -1,3 +1,4 @@
 export * from './Broker';
-export * from './connection';
+export * from './Connections';
 export * from './Consumer';
+export * from './@types';

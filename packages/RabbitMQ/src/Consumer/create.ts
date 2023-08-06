@@ -1,9 +1,9 @@
 import { QueueConsumerProps } from '../@types/rabbit-mq';
-import { getConsumeChannel } from '../connection';
 import { REQUEUE_EXCHANGE } from '../constants';
+import { getConsumeChannel } from '../Connections';
 
 export const createConsumers = async (consumers: QueueConsumerProps[]) => {
-    const channel = getConsumeChannel();
+    const channel = await getConsumeChannel();
     for await (const consumer of consumers) {
         const { exchange, queueName } = consumer;
         const requeueQueue = `${queueName}_requeue`;

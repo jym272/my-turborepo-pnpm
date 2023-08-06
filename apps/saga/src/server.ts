@@ -1,32 +1,26 @@
-import { ServerBuilder } from '@/builder';
-import { startSequelize } from '@/db';
-import { getEnvOrFail, log, logServerIsRunning } from 'utils';
-import { consume, startRabbitMQ, stopRabbitMQ } from 'rabbit-mq11111';
-import { callback } from '@/Saga';
+import express, { Request, Response } from 'express';
+import { ImageCommands, startGlobalSagaListener } from 'rabbit-mq11111';
 
-const replySagaQueue = {
-    queueName: 'reply_to_saga',
-    exchange: 'reply_exchange'
-};
+const app = express();
+const port = 3050;
 
-void (async () => {
-    try {
-        const PORT = getEnvOrFail('PORT');
-        const server = await ServerBuilder.create().addMiddlewares().addRoutes().build({ withDb: startSequelize });
-        server.listen(PORT, () => logServerIsRunning(PORT));
-        await startRabbitMQ(getEnvOrFail('RABBIT_URI'), [replySagaQueue]);
-        void consume('reply_to_saga', callback);
-    } catch (error) {
-        log(error);
-        process.exitCode = 1;
-    }
-})();
+// eslint-disable-next-line no-console
+const log = console.log;
 
-const terminateProcessListener: NodeJS.SignalsListener = async signal => {
-    await stopRabbitMQ();
-    log('\x1b[31m%s\x1b[0m', `${String.fromCodePoint(0x1f44b)} ${signal} Server is shutting down. Goodbye!`);
-    process.exit(0);
-};
+app.use(express.json());
 
-process.on('SIGINT', terminateProcessListener);
-process.on('SIGTERM', terminateProcessListener);
+app.get('/', (_req: Request, res: Response) => {
+    res.send("Hello, I'm -mint-");
+});
+
+app.listen(port, async () => {
+    const e = await startGlobalSagaListener('amqp://rabbit:1234@localhost:5672');
+
+    e.on('*', (command, data) => {
+        const { channel, sagaId, payload } = data;
+        console.log({ command, sagaId, payload });
+        channel.nackWithDelayAndRetries(100, 100);
+    });
+
+    log(`Server is running on http://localhost:${port}`);
+});

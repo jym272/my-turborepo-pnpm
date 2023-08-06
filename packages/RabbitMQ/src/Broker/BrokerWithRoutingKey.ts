@@ -1,11 +1,11 @@
 import * as amqp from 'amqplib';
-import { getRabbitMQConn } from '../connection';
+import { getRabbitMQConn } from '../Connections';
 
 let sendChannel: amqp.Channel | null = null;
 
 const getSendChannel = async () => {
     if (sendChannel === null) {
-        sendChannel = await getRabbitMQConn().createChannel();
+        sendChannel = await (await getRabbitMQConn()).createChannel();
     }
     return sendChannel;
 };

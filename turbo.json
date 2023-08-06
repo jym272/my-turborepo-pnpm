@@ -34,11 +34,9 @@
       "persistent": true
     },
     "saga#dev": {
-      "dependsOn": ["utils#build:dev", "rabbit-mq11111#build:dev"],
+      "dependsOn": ["rabbit-mq11111#build:dev"],
       "outputs": ["dist/**/*"],
       "inputs": ["src/**/*"],
-      "env": ["POSTGRES_*", "RABBIT_URI", "CORS_LIST", "PORT"],
-      "dotEnv": [".env"],
       "cache": false,
       "persistent": true
     },
