@@ -1,6 +1,6 @@
 {
   "name": "micro-image",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "./dist/server.js",
   "private": true,

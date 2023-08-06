@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.2.0
+
+### Minor Changes
+
+-   a09138f: Two functions -> micro/saga -> it creates the consumers and returns an emitter
+
 ## 0.1.12
 
 ### Patch Changes
