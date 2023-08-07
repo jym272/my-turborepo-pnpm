@@ -18,7 +18,7 @@ app.listen(port, async () => {
 
     e.on('*', async (command, { step, channel }) => {
         console.log({ command, step });
-        await channel.nackWithDelayAndRetries(100, 100);
+        await channel.nackWithDelayAndRetries(1500, 100);
     });
 
     log(`Server is running on http://localhost:${port}`);

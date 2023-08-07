@@ -23,12 +23,9 @@ const waitWithMessage = async (msg: string, time: number) => {
     console.log(msg);
 };
 
-/*
 const needToRequeueWithDelay = () => {
-    return Math.random() >= 0.5;
+    return Math.random() >= 0.6;
 };
-
-*/
 
 app.listen(port, async () => {
     const emitter = await connectToSagaCommandEmitter(
@@ -37,16 +34,24 @@ app.listen(port, async () => {
     );
 
     emitter.on(ImageCommands.CreateImage, async ({ channel, sagaId, payload }) => {
-        console.log(`${ImageCommands.CreateImage}`, { payload, sagaId });
-
-        await waitWithMessage('La imagen se ha creado', 1000);
-        channel.ackMessage({ imageId: Math.random() });
+        if (needToRequeueWithDelay()) {
+            console.log(`NACK - Requeue ${ImageCommands.CreateImage} with delay`);
+            await channel.nackWithDelayAndRetries();
+        } else {
+            console.log(`${ImageCommands.CreateImage}`, { payload, sagaId });
+            await waitWithMessage('La imagen se ha creado', 2000);
+            channel.ackMessage({ imageId: Math.random() });
+        }
     });
     emitter.on(ImageCommands.UpdateToken, async ({ channel, sagaId, payload }) => {
-        console.log(`${ImageCommands.UpdateToken}`, { payload, sagaId });
-
-        await waitWithMessage('La imagen se ha actualizado', 1000);
-        channel.ackMessage({ imageidUpdated: Math.random() });
+        if (needToRequeueWithDelay()) {
+            console.log(`NACK - Requeue ${ImageCommands.UpdateToken} with delay`);
+            await channel.nackWithDelayAndRetries();
+        } else {
+            console.log(`${ImageCommands.UpdateToken}`, { payload, sagaId });
+            await waitWithMessage('La imagen se ha actualizado', 2000);
+            channel.ackMessage({ imageidUpdated: Math.random() });
+        }
     });
 
     log(`Server is running on http://localhost:${port}`);
