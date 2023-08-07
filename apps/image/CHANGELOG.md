@@ -1,5 +1,12 @@
 # micro-image
 
+## 0.0.8
+
+### Patch Changes
+
+-   Updated dependencies [4258be8]
+    -   rabbit-mq11111@0.2.4
+
 ## 0.0.7
 
 ### Patch Changes

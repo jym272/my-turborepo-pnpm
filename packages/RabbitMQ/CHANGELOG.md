@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.2.4
+
+### Patch Changes
+
+-   4258be8: utils in index
+
 ## 0.2.3
 
 ### Patch Changes
