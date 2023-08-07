@@ -12,9 +12,9 @@ export const nackWithDelay = async (
     const channel = await getConsumeChannel();
     channel.nack(msg, false, false); // nack without requeueing immediately
 
-    let count = 0;
+    let count = 1;
     if (msg.properties.headers['x-death']) {
-        count = msg.properties.headers['x-death'][0].count;
+        count = msg.properties.headers['x-death'][0].count + 1;
     }
     // console.log('nacking', msg.properties.headers['x-death'], { count });
 
@@ -37,13 +37,13 @@ export const nackWithDelay = async (
     }
 
     if (count > maxRetries) {
-        //refactor with chalk colors
-        console.warn(`MAX NACK RETRIES REACHED: ${maxRetries} - NACKING ${queueName} - ${msg.content.toString()}`);
-        return;
+        console.error(`MAX NACK RETRIES REACHED: ${maxRetries} - NACKING ${queueName} - ${msg.content.toString()}`);
+        return maxRetries;
     }
 
     channel.publish(Exchange.Requeue, `${queueName}_routing_key`, msg.content, {
         expiration: delay,
         headers: msg.properties.headers
     });
+    return count;
 };

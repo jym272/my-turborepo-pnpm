@@ -29,6 +29,6 @@ export class MicroserviceConsumeChannel<T extends AvailableMicroservices> extend
     }
 
     async nackWithDelayAndRetries(delay?: number, maxRetries?: number) {
-        await nackWithDelay(this.msg, this.queueName, delay, maxRetries);
+        return await nackWithDelay(this.msg, this.queueName, delay, maxRetries);
     }
 }

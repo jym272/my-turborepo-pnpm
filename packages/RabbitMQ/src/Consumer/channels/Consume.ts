@@ -18,7 +18,7 @@ abstract class ConsumeChannel<T extends AvailableMicroservices> {
 
     protected abstract nackMessage(): void;
 
-    public abstract nackWithDelayAndRetries(delay?: number, maxRetries?: number): Promise<void>;
+    public abstract nackWithDelayAndRetries(delay?: number, maxRetries?: number): Promise<number>;
 }
 
 export default ConsumeChannel;

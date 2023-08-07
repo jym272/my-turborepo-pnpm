@@ -14,14 +14,13 @@ app.get('/', (_req: Request, res: Response) => {
     res.send("Hello, I'm -image-");
 });
 
-
 const waitWithMessage = async (msg: string, time: number) => {
     await new Promise(resolve => setTimeout(resolve, time));
     console.log(msg);
 };
 
 const needToRequeueWithDelay = () => {
-    return Math.random() >= 0.6;
+    return Math.random() >= 0.1;
 };
 
 app.listen(port, async () => {
@@ -32,8 +31,8 @@ app.listen(port, async () => {
 
     emitter.on(ImageCommands.CreateImage, async ({ channel, sagaId, payload }) => {
         if (needToRequeueWithDelay()) {
-            console.log(`NACK - Requeue ${ImageCommands.CreateImage} with delay`);
-            await channel.nackWithDelayAndRetries();
+            const count = await channel.nackWithDelayAndRetries(1000, 3);
+            console.log(`NACK - Requeue ${ImageCommands.CreateImage} with delay and retries ${count}`);
         } else {
             console.log(`${ImageCommands.CreateImage}`, { payload, sagaId });
             await waitWithMessage('La imagen se ha creado', 2000);
@@ -42,8 +41,8 @@ app.listen(port, async () => {
     });
     emitter.on(ImageCommands.UpdateToken, async ({ channel, sagaId, payload }) => {
         if (needToRequeueWithDelay()) {
-            console.log(`NACK - Requeue ${ImageCommands.UpdateToken} with delay`);
-            await channel.nackWithDelayAndRetries();
+            const count = await channel.nackWithDelayAndRetries(1000, 3);
+            console.log(`NACK - Requeue ${ImageCommands.UpdateToken} with delay and retries ${count}`);
         } else {
             console.log(`${ImageCommands.UpdateToken}`, { payload, sagaId });
             await waitWithMessage('La imagen se ha actualizado', 2000);
