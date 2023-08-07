@@ -27,3 +27,7 @@ export interface SagaStep<T extends AvailableMicroservices> {
 export type ConsumerEvents<T extends AvailableMicroservices> = {
     [key in CommandMap[T]]: { sagaId: number; payload: Record<string, any>; channel: ConsumeChannel<T> };
 };
+
+export type ConsumerSagaEvents<T extends AvailableMicroservices> = {
+    [key in CommandMap[T]]: { step: SagaStep<T>; channel: ConsumeChannel<T> };
+};

@@ -1,4 +1,4 @@
-import { AvailableMicroservices } from '../@types';
+import { AvailableMicroservices, ConsumerEvents, ConsumerSagaEvents } from '../@types';
 import { getRabbitMQConn, saveUri } from './rabbitConn';
 import { getConsumeChannel } from './consumeChannel';
 import { consume, createConsumers, microserviceConsumeCallback, sagaConsumeCallback } from '../Consumer';
@@ -16,7 +16,7 @@ export const startGlobalSagaListener = async (url: string) => {
         exchange: 'reply_exchange'
     };
     await createConsumers([queue]);
-    return await consume(queue.queueName, sagaConsumeCallback);
+    return await consume<ConsumerSagaEvents<AvailableMicroservices>>(queue.queueName, sagaConsumeCallback);
 };
 
 export const connectToSagaCommandEmitter = async <T extends AvailableMicroservices>(url: string, micro: T) => {
@@ -26,5 +26,5 @@ export const connectToSagaCommandEmitter = async <T extends AvailableMicroservic
         exchange: 'commands_exchange'
     };
     await createConsumers([queue]);
-    return await consume<T>(queue.queueName, microserviceConsumeCallback);
+    return await consume<ConsumerEvents<T>>(queue.queueName, microserviceConsumeCallback);
 };

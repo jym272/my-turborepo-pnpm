@@ -16,10 +16,9 @@ app.get('/', (_req: Request, res: Response) => {
 app.listen(port, async () => {
     const e = await startGlobalSagaListener('amqp://rabbit:1234@localhost:5672');
 
-    e.on('*', (command, data) => {
-        const { channel, sagaId, payload } = data;
-        console.log({ command, sagaId, payload });
-        channel.nackWithDelayAndRetries(5000, 100);
+    e.on('*', async (command, { step, channel }) => {
+        console.log({ command, step });
+        await channel.nackWithDelayAndRetries(100, 100);
     });
 
     log(`Server is running on http://localhost:${port}`);

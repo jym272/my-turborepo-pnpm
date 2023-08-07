@@ -1,4 +1,4 @@
-import { AvailableMicroservices, ConsumerEvents, SagaStep } from '../../@types';
+import { AvailableMicroservices, ConsumerSagaEvents, SagaStep } from '../../@types';
 import { Channel, ConsumeMessage } from 'amqplib';
 import { Emitter } from 'mitt';
 import { SagaConsumeChannel } from '../channels/Saga';
@@ -6,7 +6,7 @@ import { SagaConsumeChannel } from '../channels/Saga';
 export const sagaConsumeCallback = <T extends AvailableMicroservices>(
     msg: ConsumeMessage | null,
     channel: Channel,
-    e: Emitter<ConsumerEvents<T>>,
+    e: Emitter<ConsumerSagaEvents<T>>,
     queueName: string
 ) => {
     if (!msg) {
@@ -21,8 +21,7 @@ export const sagaConsumeCallback = <T extends AvailableMicroservices>(
         channel.nack(msg, false, false);
         return;
     }
-    const { command, sagaId, payload } = currentStep;
     const responseChannel = new SagaConsumeChannel<T>(channel, msg, queueName, currentStep);
 
-    e.emit(command, { sagaId, payload, channel: responseChannel });
+    e.emit(currentStep.command, { step: currentStep, channel: responseChannel });
 };
