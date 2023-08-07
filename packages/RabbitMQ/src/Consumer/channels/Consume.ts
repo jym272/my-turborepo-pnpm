@@ -16,7 +16,7 @@ abstract class ConsumeChannel<T extends AvailableMicroservices> {
 
     public abstract ackMessage(payloadForNextStep?: Record<string, any>): void;
 
-    public abstract nackMessage(): void;
+    protected abstract nackMessage(): void;
 
     public abstract nackWithDelayAndRetries(delay?: number, maxRetries?: number): Promise<void>;
 }

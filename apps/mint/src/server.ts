@@ -13,11 +13,6 @@ app.get('/', (_req: Request, res: Response) => {
     res.send("Hello, I'm -mint-");
 });
 
-export const mintQueue = {
-    queueName: 'mint_saga_commands',
-    exchange: 'commands_exchange'
-};
-
 const needToRequeueWithDelay = () => {
     return Math.random() >= 0.6;
 };
@@ -34,7 +29,7 @@ app.listen(port, async () => {
             await channel.nackWithDelayAndRetries();
         } else {
             console.log(`${MintCommands.MintImage}`, { payload, sagaId });
-            await waitWithMessage('IMAGE MINTED', 2000);
+            await waitWithMessage('La imagen se ha minteado', 2000);
             channel.ackMessage({ tokenId: Math.random() });
         }
     });
