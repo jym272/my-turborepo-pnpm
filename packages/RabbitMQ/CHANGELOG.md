@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.2.1
+
+### Patch Changes
+
+-   4e1cff9: step prop in saga listener
+
 ## 0.2.0
 
 ### Minor Changes
