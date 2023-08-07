@@ -1,5 +1,12 @@
 # micro-mint
 
+## 0.0.13
+
+### Patch Changes
+
+-   Updated dependencies [9dee5c8]
+    -   rabbit-mq11111@0.2.3
+
 ## 0.0.12
 
 ### Patch Changes
