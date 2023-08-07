@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.2.2
+
+### Patch Changes
+
+-   556615d: nacKMessage is not available, is protected in the abstract class
+
 ## 0.2.1
 
 ### Patch Changes
