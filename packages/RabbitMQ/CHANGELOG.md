@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.2.5
+
+### Patch Changes
+
+-   2dcbaac: returning to "reply_exchange" in reply_to_saga_requeue
+
 ## 0.2.4
 
 ### Patch Changes
