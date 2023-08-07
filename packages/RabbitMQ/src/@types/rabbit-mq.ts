@@ -4,7 +4,7 @@ export enum Queue {
 export enum Exchange {
     Requeue = 'requeue_exchange',
     Commands = 'commands_exchange',
-    ReplyToSaga = 'reply_to_saga_exchange'
+    ReplyToSaga = 'reply_exchange'
 }
 export interface QueueConsumerProps {
     queueName: string;
