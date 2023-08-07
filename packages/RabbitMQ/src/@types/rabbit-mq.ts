@@ -1,8 +1,12 @@
+export enum Queue {
+    ReplyToSaga = 'reply_to_saga'
+}
+export enum Exchange {
+    Requeue = 'requeue_exchange',
+    Commands = 'commands_exchange',
+    ReplyToSaga = 'reply_to_saga_exchange'
+}
 export interface QueueConsumerProps {
     queueName: string;
-    exchange: string;
-}
-
-export interface QueueProps extends QueueConsumerProps {
-    routingKey: string;
+    exchange: Exchange;
 }

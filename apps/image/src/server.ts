@@ -14,10 +14,7 @@ app.get('/', (_req: Request, res: Response) => {
     res.send("Hello, I'm -image-");
 });
 
-export const imageQueue = {
-    queueName: 'image_saga_commands',
-    exchange: 'commands_exchange'
-};
+
 const waitWithMessage = async (msg: string, time: number) => {
     await new Promise(resolve => setTimeout(resolve, time));
     console.log(msg);

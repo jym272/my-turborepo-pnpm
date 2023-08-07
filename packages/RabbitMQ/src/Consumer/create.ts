@@ -1,6 +1,6 @@
 import { QueueConsumerProps } from '../@types/rabbit-mq';
-import { REQUEUE_EXCHANGE } from '../constants';
 import { getConsumeChannel } from '../Connections';
+import { Exchange } from '../@types';
 
 export const createConsumers = async (consumers: QueueConsumerProps[]) => {
     const channel = await getConsumeChannel();
@@ -13,12 +13,12 @@ export const createConsumers = async (consumers: QueueConsumerProps[]) => {
         await channel.assertQueue(queueName, { durable: true });
         await channel.bindQueue(queueName, exchange, routingKey);
 
-        await channel.assertExchange(REQUEUE_EXCHANGE, 'direct', { durable: true });
+        await channel.assertExchange(Exchange.Requeue, 'direct', { durable: true });
         await channel.assertQueue(requeueQueue, {
             durable: true,
             arguments: { 'x-dead-letter-exchange': exchange }
         });
-        await channel.bindQueue(requeueQueue, REQUEUE_EXCHANGE, routingKey);
+        await channel.bindQueue(requeueQueue, Exchange.Requeue, routingKey);
         await channel.prefetch(1); // process only one message at a time
     }
 };

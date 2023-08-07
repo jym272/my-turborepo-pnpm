@@ -1,6 +1,7 @@
 import { ConsumeMessage } from 'amqplib';
-import { MAX_NACK_RETRIES, NACKING_DELAY_MS, REQUEUE_EXCHANGE } from '../constants';
+import { MAX_NACK_RETRIES, NACKING_DELAY_MS } from '../constants';
 import { getConsumeChannel } from '../Connections';
+import { Exchange } from '../@types';
 
 export const nackWithDelay = async (
     msg: ConsumeMessage,
@@ -41,7 +42,7 @@ export const nackWithDelay = async (
         return;
     }
 
-    channel.publish(REQUEUE_EXCHANGE, `${queueName}_routing_key`, msg.content, {
+    channel.publish(Exchange.Requeue, `${queueName}_routing_key`, msg.content, {
         expiration: delay,
         headers: msg.properties.headers
     });
