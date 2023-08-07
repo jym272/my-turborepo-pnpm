@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.2.3
+
+### Patch Changes
+
+-   9dee5c8: const refactored, enum in queues and exchanges
+
 ## 0.2.2
 
 ### Patch Changes
