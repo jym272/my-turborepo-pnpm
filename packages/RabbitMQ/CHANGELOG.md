@@ -1,5 +1,11 @@
 # rabbit-mq11111
 
+## 0.2.6
+
+### Patch Changes
+
+-   3b4a3cc: jsdoc and tsdoc
+
 ## 0.2.5
 
 ### Patch Changes
