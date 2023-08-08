@@ -18,22 +18,22 @@ app.get('/', (_req: Request, res: Response) => {
 // };
 
 app.listen(port, async () => {
-    const e = await startGlobalSagaListener('amqp://rabbit:1234@localhost:5672');
+    const e = await startGlobalSagaListener<AvailableMicroservices>('amqp://rabbit:1234@localhost:5672');
 
-    e.on('*', async (command, { step, channel }) => {
-        if (command === MintCommands.MintImage) {
-            console.log('A VOS NO TE CONSUO');
-            return;
-        }
-        console.log('NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKINK');
-        await channel.nackWithDelayAndRetries(1000, 100);
-    });
     // Tengo que escuchar todos los eventos que se emiten de otra manera quedará en
     // el mesanje quedará unacked en la cola de rabbit
     // Solución cerrar el canal y abrirlo de nuevo.
     e.on(MintCommands.MintImage, async ({ channel, step }) => {
         console.log(`NACKKKKK - Requeue ${MintCommands.MintImage} with delay`);
-        await channel.nackWithDelayAndRetries(1000);
+        await channel.nackWithDelayAndRetries(100, 100);
+    });
+    e.on('*', async (command, { step, channel }) => {
+        if (command === MintCommands.MintImage) {
+            console.log('IGNORADO', command);
+            return;
+        }
+        console.log('A VOS NO TE CONSUO', command);
+        await channel.nackWithDelayAndRetries(100, 100);
     });
     log(`Server is running on http://localhost:${port}`);
 });

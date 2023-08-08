@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { AvailableMicroservices, ImageCommands, connectToSagaCommandEmitter } from 'rabbit-mq11111';
+import { AvailableMicroservices, ImageCommands, connectToSagaCommandEmitter, stopRabbitMQ } from 'rabbit-mq11111';
 
 const app = express();
 const port = 3020;
@@ -50,6 +50,27 @@ app.listen(port, async () => {
             channel.ackMessage({ imageidUpdated: Math.random() });
         }
     });
+    // emitter.on('*', async (command, { channel, sagaId, payload }) => {
+    //     if (command === ImageCommands.CreateImage || command === ImageCommands.UpdateToken) {
+    //         console.log('ALLLLLLo', command);
+    //
+    //         return;
+    //     }
+    //     console.log('OOOOOOOOOOOOOOOOOO', command);
+    //
+    //     // nunca deberia llegar aca
+    //     // console.log(`NACJKEADON ANDO   with delay and retries`, command);
+    //     await channel.nackWithDelayAndRetries(100, 3);
+    // });
 
     log(`Server is running on http://localhost:${port}`);
 });
+
+const terminateProcessListener: NodeJS.SignalsListener = async signal => {
+    await stopRabbitMQ();
+    console.warn('\x1b[31m%s\x1b[0m', `${String.fromCodePoint(0x1f44b)} ${signal} Server is shutting down. Goodbye!`);
+    process.exit(0);
+};
+
+process.on('SIGINT', terminateProcessListener);
+process.on('SIGTERM', terminateProcessListener);

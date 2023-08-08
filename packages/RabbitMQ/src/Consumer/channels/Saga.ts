@@ -1,8 +1,16 @@
 import { nackWithDelay } from '../nack';
 import ConsumeChannel from './Consume';
 import { AvailableMicroservices } from '../../@types';
-
+/**
+ * Represents a consume channel for handling saga events/commands.
+ * Extends the abstract ConsumeChannel class.
+ *
+ * @typeparam T - The type of available microservices.
+ */
 export class SagaConsumeChannel<T extends AvailableMicroservices> extends ConsumeChannel<T> {
+    /**
+     * Acknowledges the consumed saga event/command.
+     */
     ackMessage(): void {
         this.channel.ack(this.msg, false);
     }

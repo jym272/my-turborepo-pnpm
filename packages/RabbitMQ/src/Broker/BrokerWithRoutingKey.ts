@@ -11,7 +11,11 @@ const getSendChannel = async () => {
 };
 
 const EXCHANGE_NAME = 'DIRECT_EXCHANGE';
-
+/**
+ * Send a message payload to a specified queue.
+ * @deprecated Use {@link sendToQueue} instead.
+ *
+ */
 export const sendToQueueWithRoutingKey = async <T extends Record<string, any>>(
     queueName: string,
     routingKey: string,

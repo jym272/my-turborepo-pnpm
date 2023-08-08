@@ -2,7 +2,12 @@ import { AvailableMicroservices, Queue, Status } from '../../@types';
 import { sendToQueue } from '../../Broker';
 import { nackWithDelay } from '../nack';
 import ConsumeChannel from './Consume';
-
+/**
+ * Represents a consume channel for a specific microservice.
+ * Extends the abstract ConsumeChannel class.
+ *
+ * @typeparam T - The type of available microservices.
+ */
 export class MicroserviceConsumeChannel<T extends AvailableMicroservices> extends ConsumeChannel<T> {
     ackMessage(payloadForNextStep: Record<string, any>): void {
         this.step.status = Status.Success;

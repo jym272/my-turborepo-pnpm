@@ -2,7 +2,16 @@ import { AvailableMicroservices, ConsumerEvents, SagaStep } from '../../@types';
 import { Channel, ConsumeMessage } from 'amqplib';
 import { Emitter } from 'mitt';
 import { MicroserviceConsumeChannel } from '../channels';
-
+/**
+ * Callback function for consuming microservice events/commands.
+ *
+ * @typeparam T - The type of available microservices.
+ *
+ * @param {ConsumeMessage | null} msg - The consumed message.
+ * @param {Channel} channel - The channel used for consuming messages.
+ * @param {Emitter<ConsumerEvents<T>>} e - The emitter to emit events.
+ * @param {string} queueName - The name of the queue from which the message was consumed.
+ */
 export const microserviceConsumeCallback = <T extends AvailableMicroservices>(
     msg: ConsumeMessage | null,
     channel: Channel,
