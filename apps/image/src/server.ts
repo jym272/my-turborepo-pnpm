@@ -24,6 +24,7 @@ const needToRequeueWithDelay = () => {
 };
 
 app.listen(port, async () => {
+    // RECORDAR CONSUMIR TODOS LOS MENSAJES DE LA COLA de IMAGE COMMANDS
     const emitter = await connectToSagaCommandEmitter(
         'amqp://rabbit:1234@localhost:5672',
         AvailableMicroservices.Image
@@ -31,11 +32,11 @@ app.listen(port, async () => {
 
     emitter.on(ImageCommands.CreateImage, async ({ channel, sagaId, payload }) => {
         if (needToRequeueWithDelay()) {
-            const count = await channel.nackWithDelayAndRetries(1000, 3);
+            const count = await channel.nackWithDelayAndRetries(1000, 30);
             console.log(`NACK - Requeue ${ImageCommands.CreateImage} with delay and retries`, count);
         } else {
             console.log(`${ImageCommands.CreateImage}`, { payload, sagaId });
-            await waitWithMessage('La imagen se ha creado', 2000);
+            await waitWithMessage('La imagen se ha creado', 100);
             channel.ackMessage({ imageId: Math.random() });
         }
     });
@@ -45,7 +46,7 @@ app.listen(port, async () => {
             console.log(`NACK - Requeue ${ImageCommands.UpdateToken} with delay and retries`, count);
         } else {
             console.log(`${ImageCommands.UpdateToken}`, { payload, sagaId });
-            await waitWithMessage('La imagen se ha actualizado', 2000);
+            await waitWithMessage('La imagen se ha actualizado', 100);
             channel.ackMessage({ imageidUpdated: Math.random() });
         }
     });

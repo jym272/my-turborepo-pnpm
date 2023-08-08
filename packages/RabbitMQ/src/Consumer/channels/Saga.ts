@@ -11,6 +11,7 @@ export class SagaConsumeChannel<T extends AvailableMicroservices> extends Consum
     }
 
     async nackWithDelayAndRetries(delay?: number, maxRetries?: number) {
+        console.log('SagaConsumeChannel nackWithDelayAndRetries', this.queueName);
         return await nackWithDelay(this.msg, this.queueName, delay, maxRetries);
     }
 }

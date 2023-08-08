@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { startGlobalSagaListener } from 'rabbit-mq11111';
+import { AvailableMicroservices, MintCommands, startGlobalSagaListener, stopRabbitMQ } from 'rabbit-mq11111';
 
 const app = express();
 const port = 3050;
@@ -13,13 +13,36 @@ app.get('/', (_req: Request, res: Response) => {
     res.send("Hello, I'm -mint-");
 });
 
+// const needToRequeueWithDelay = () => {
+//     return Math.random() >= 0.6;
+// };
+
 app.listen(port, async () => {
     const e = await startGlobalSagaListener('amqp://rabbit:1234@localhost:5672');
 
     e.on('*', async (command, { step, channel }) => {
-        console.log({ command, step });
-        await channel.nackWithDelayAndRetries(1500, 100);
+        if (command === MintCommands.MintImage) {
+            console.log('A VOS NO TE CONSUO');
+            return;
+        }
+        console.log('NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKINK');
+        await channel.nackWithDelayAndRetries(1000, 100);
     });
-
+    // Tengo que escuchar todos los eventos que se emiten de otra manera quedará en
+    // el mesanje quedará unacked en la cola de rabbit
+    // Solución cerrar el canal y abrirlo de nuevo.
+    e.on(MintCommands.MintImage, async ({ channel, step }) => {
+        console.log(`NACKKKKK - Requeue ${MintCommands.MintImage} with delay`);
+        await channel.nackWithDelayAndRetries(1000);
+    });
     log(`Server is running on http://localhost:${port}`);
 });
+
+const terminateProcessListener: NodeJS.SignalsListener = async signal => {
+    await stopRabbitMQ();
+    console.warn('\x1b[31m%s\x1b[0m', `${String.fromCodePoint(0x1f44b)} ${signal} Server is shutting down. Goodbye!`);
+    process.exit(0);
+};
+
+process.on('SIGINT', terminateProcessListener);
+process.on('SIGTERM', terminateProcessListener);
