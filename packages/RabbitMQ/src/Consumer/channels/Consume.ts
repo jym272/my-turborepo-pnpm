@@ -58,6 +58,9 @@ abstract class ConsumeChannel<T extends AvailableMicroservices> {
      * @param {number} [delay] - The delay before requeueing the message.
      * @param {number} [maxRetries] - The maximum number of nack retries.
      * @returns {Promise<number>} A promise resolving to the count of retries.
+     * @see nackWithDelay
+     * @see NACKING_DELAY_MS
+     * @see MAX_NACK_RETRIES
      */
     public abstract nackWithDelayAndRetries(delay?: number, maxRetries?: number): Promise<number>;
 }
