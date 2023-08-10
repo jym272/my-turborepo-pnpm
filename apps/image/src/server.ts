@@ -42,7 +42,7 @@ app.listen(port, async () => {
     });
     emitter.on(ImageCommands.UpdateToken, async ({ channel, sagaId, payload }) => {
         if (needToRequeueWithDelay()) {
-            const count = await channel.nackWithDelayAndRetries(1000, 3);
+            const count = await channel.nackWithDelayAndRetries(1000, 30);
             console.log(`NACK - Requeue ${ImageCommands.UpdateToken} with delay and retries`, count);
         } else {
             console.log(`${ImageCommands.UpdateToken}`, { payload, sagaId });

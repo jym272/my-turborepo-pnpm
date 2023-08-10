@@ -25,3 +25,7 @@ Cosas que son comunes y pueden ir en está librería
 - añadir comentarios a todo el paquete de RabbitmQ
 - demonio que vigiel quje los sagas se coimpleten, un proceso en el saga puede nack y queado el saga pednientge ahi!
 - se puiede usar redis por ejemplo para regresar con el tiempo!!! -agregar
+
+
+
+- changeset BOT, advierte en una pr is hay un changeset detected https://github.com/withastro/astro/pull/8033

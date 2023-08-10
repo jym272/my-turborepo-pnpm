@@ -31,7 +31,7 @@ const prepare = async (url: string) => {
  * @example
  * const url = 'amqp://localhost';
  * const sagaEmitter = await startGlobalSagaListener<AvailableMicroservices>(url);
- * // also valid and equivalent to the above
+ * // Also valid and equivalent to the above
  * const sagaEmitter = await startGlobalSagaListener(url);
  *
  * // Listen to a single microservice saga event

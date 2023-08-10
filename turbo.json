@@ -21,22 +21,16 @@
     "lint": {},
     "micro-mint#dev": {
       "dependsOn": ["rabbit-mq11111#build:dev"],
-      "outputs": ["dist/**/*"],
-      "inputs": ["src/**/*"],
       "cache": false,
       "persistent": true
     },
     "micro-image#dev": {
       "dependsOn": ["rabbit-mq11111#build:dev"],
-      "outputs": ["dist/**/*"],
-      "inputs": ["src/**/*"],
       "cache": false,
       "persistent": true
     },
     "saga#dev": {
       "dependsOn": ["rabbit-mq11111#build:dev"],
-      "outputs": ["dist/**/*"],
-      "inputs": ["src/**/*"],
       "cache": false,
       "persistent": true
     },

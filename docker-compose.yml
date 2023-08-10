@@ -37,7 +37,7 @@ services:
 #    depends_on:
 #      - db
   db:
-    image: postgres
+    image: postgres:alpine
     environment:
       - POSTGRES_USER=jorge
       - POSTGRES_DB=test
@@ -52,7 +52,7 @@ services:
       start_period: 2s
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3-management-alpine
     ports:
       - 5672:5672
       - 15672:15672
