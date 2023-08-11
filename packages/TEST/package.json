@@ -1,0 +1,52 @@
+{
+  "name": "rabbit-mq22222",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "rimraf dist .turbo",
+    "build:dev": "tsc",
+    "build": "pnpm run prebuild && tsup",
+    "lint": "eslint --ext .ts src",
+    "typecheck": "tsc --noEmit",
+    "prebuild": "pnpm run typecheck"
+  },
+  "dependencies": {
+    "amqplib": "latest",
+    "@types/amqplib": "latest",
+    "mitt": "latest"
+  },
+  "devDependencies": {
+    "tsconfig": "workspace:*",
+    "eslint-config-custom": "workspace:*"
+  },
+  "peerDependencies": {
+    "amqplib": ">=0.10.3",
+    "@types/amqplib": ">=0.10.1",
+    "mitt": ">=3.0.1"
+  },
+  "tsup": {
+    "entry": [
+      "src/**/*.ts"
+    ],
+    "splitting": true,
+    "sourcemap": false,
+    "clean": true,
+    "format": [
+      "cjs",
+      "esm"
+    ],
+    "dts": true,
+    "treeshake": true,
+    "minify": true,
+    "outDir": "dist"
+  }
+}
